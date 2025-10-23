@@ -1,11 +1,11 @@
-from .errors import DroneFileNameReadError, ConfigFileKeyError
-from .Point import Point
-from .Color import Color
-from .DroneStatus import DroneStatus
-from .DroneAnimationSatus import DroneAnimationStatus
-from .Command import Command
 from .Animation import Animation
+from .Color import Color
+from .Command import Command
 from .Drone import Drone
+from .DroneAnimationSatus import DroneAnimationStatus
+from .DroneStatus import DroneStatus
+from .Point import Point
+from .errors import DroneFileNameReadError, ConfigFileKeyError
 
 __all__ = [
     'DroneFileNameReadError',

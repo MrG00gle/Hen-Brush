@@ -18,6 +18,7 @@
 import pathlib
 from dataclasses import dataclass
 from typing import Tuple, List, Optional
+
 from .Color import Color
 from .Point import Point
 

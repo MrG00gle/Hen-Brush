@@ -18,12 +18,14 @@
 
 from math import sqrt
 from typing import Tuple, Optional
-from .Point import Point
-from .Color import Color
+
 from .Animation import Animation
-from .DroneStatus import DroneStatus
-from .DroneAnimationSatus import DroneAnimationStatus
+from .Color import Color
 from .Command import Command
+from .DroneAnimationSatus import DroneAnimationStatus
+from .DroneStatus import DroneStatus
+from .Point import Point
+
 
 class Drone:
     _id: int
