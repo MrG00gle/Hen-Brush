@@ -86,7 +86,7 @@ class Loader:
                 with open(drone_file, 'r') as file:
                     csvreader = csv.reader(file)
                     for line in csvreader:
-                        timestamps.append(line[0])
+                        timestamps.append(int(line[0]))
                         flight_path.append(Point(x=float(line[1]), y=float(line[2]), z=float(line[3])))
                         colors.append(Color(r=int(line[4]), g=int(line[5]), b=int(line[6])))
 

@@ -25,6 +25,7 @@
         enable = true;
         requirements = ''
         pip
+        pyserial
         pycairo
         PyGObject
         '';

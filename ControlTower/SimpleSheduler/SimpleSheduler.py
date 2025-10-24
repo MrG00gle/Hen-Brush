@@ -18,8 +18,7 @@
 
 import time
 from threading import Thread
-from typing import List
-
+from typing import List, Callable
 from ..common import *
 
 
@@ -28,8 +27,9 @@ class SimpleScheduler:
     threads: List[Thread]
     drones: List[Drone]
 
-    def __init__(self):
-        pass
+    def __init__(self, drones: List[Drone], operation: Callable):
+        self.drones = drones
+        self.add_thread(operation=operation, drones=self.drones)
 
     def thread(self, drone: Drone, operation):
         drone.animation_status = DroneAnimationStatus.LIVE
@@ -54,13 +54,27 @@ class SimpleScheduler:
                 case _:
                     continue
 
-    def add_thread(self, operation, drone: Drone):
-        self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation)))
+    def add_thread(self, operation: Callable, drones: List[Drone]):
+        for drone in drones:
+            self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation)))
+        self.threads.sort(key=lambda thread: int(thread.name))
 
-    def start(self):
-        for thread in self.threads:
-            thread.start()
+    def start(self, drones: List[Drone] = None):
+        if drones is None:
+            for drone in self.drones:
+               self.threads[drone.id].start()
+        else:
+            for drone in drones:
+               self.threads[drone.id].start()
 
-    def start(self, drone: Drone):
-        thread.getName()
-    def stop(self):
+    def pause(self, drones: List[Drone]):
+        for drone in drones:
+            drone.animation_status = DroneAnimationStatus.PAUSED
+
+    def stop(self, drones: List[Drone] = None):
+        if drones is None:
+            for drone in self.drones:
+                drone.animation_status = DroneAnimationStatus.ENDED
+        else:
+            for drone in drones:
+                drone.animation_status = DroneAnimationStatus.ENDED
