@@ -26,11 +26,13 @@ from ..common import *
 class SimpleScheduler:
 
     threads: List[Thread]
+    drones: List[Drone]
 
     def __init__(self):
         pass
 
     def thread(self, drone: Drone, operation):
+        drone.animation_status = DroneAnimationStatus.LIVE
         for step in range(drone.animation_len):
 
             if step == drone.animation_len:
@@ -52,6 +54,13 @@ class SimpleScheduler:
                 case _:
                     continue
 
-
     def add_thread(self, operation, drone: Drone):
         self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation)))
+
+    def start(self):
+        for thread in self.threads:
+            thread.start()
+
+    def start(self, drone: Drone):
+        thread.getName()
+    def stop(self):
