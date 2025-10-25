@@ -25,6 +25,7 @@
         enable = true;
         requirements = ''
         pip
+        pytest
         pyserial
         pycairo
         PyGObject

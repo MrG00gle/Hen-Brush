@@ -27,9 +27,10 @@ class SimpleScheduler:
     threads: List[Thread]
     drones: List[Drone]
 
-    def __init__(self, drones: List[Drone], operation: Callable):
+    def __init__(self, drones: List[Drone], operation: Callable[[Drone], None], daemon: bool = False):
         self.drones = drones
-        self.add_thread(operation=operation, drones=self.drones)
+        self.threads = []
+        self.add_thread(operation=operation, drones=self.drones, daemon=daemon)
 
     def thread(self, drone: Drone, operation):
         drone.animation_status = DroneAnimationStatus.LIVE
@@ -54,9 +55,9 @@ class SimpleScheduler:
                 case _:
                     continue
 
-    def add_thread(self, operation: Callable, drones: List[Drone]):
+    def add_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
-            self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation)))
+            self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation), daemon=daemon))
         self.threads.sort(key=lambda thread: int(thread.name))
 
     def start(self, drones: List[Drone] = None):
