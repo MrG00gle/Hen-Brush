@@ -26,6 +26,7 @@
         requirements = ''
         pip
         pytest
+        numpy
         pyserial
         pycairo
         PyGObject
