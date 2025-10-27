@@ -20,14 +20,26 @@ from dataclasses import dataclass
 
 @dataclass
 class Point:
-    X: float
-    Y: float
-    Z: float
+    _X: float
+    _Y: float
+    _Z: float
 
     def __init__(self, x: float, y: float, z: float) -> None:
-        self.X = x
-        self.Y = y
-        self.Z = z
+        self._X = x
+        self._Y = y
+        self._Z = z
 
     def __repr__(self) -> str:
         return f"{self.X} {self.Y} {self.Z}"
+
+    @property
+    def X(self):
+        return self._X
+
+    @property
+    def Y(self):
+        return self._Y
+
+    @property
+    def Z(self):
+        return self._Z

@@ -5,12 +5,14 @@ from .Drone import Drone
 from .DroneAnimationSatus import DroneAnimationStatus
 from .DroneStatus import DroneStatus
 from .Point import Point
+from .PointPacket import PointPacket
 from .errors import DroneFileNameReadError, ConfigFileKeyError
 
 __all__ = [
     'DroneFileNameReadError',
     'ConfigFileKeyError',
     'Point',
+    'PointPacket',
     'Color',
     'DroneStatus',
     'DroneAnimationStatus',

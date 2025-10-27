@@ -23,7 +23,7 @@ class TestSimpleScheduler:
                     anim_status = "ENDED"
                 case DroneAnimationStatus.READY:
                     anim_status = "READY"
-            logging.info(f"Drone: {drone.id}, Step: {drone.animation_step}, Status: {anim_status}")
+            logging.debug(f"Drone: {drone.id}, Step: {drone.animation_step}, Status: {anim_status}")
 
         scheduler = SimpleScheduler(drones=drones, operation=operation, daemon=False)
         scheduler.start()
