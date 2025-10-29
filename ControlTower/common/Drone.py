@@ -16,6 +16,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
 
+
 from math import sqrt
 from typing import Tuple, Optional
 
@@ -135,9 +136,10 @@ class Drone:
 
     @battery.setter
     def battery(self, value: int):
-        if not 0 <= value <= 100:
-            raise ValueError("Battery level must be between 0 and 100")
-        self._battery = value
+        if 0 <= value <= 100:
+            self._battery = value
+        else:
+            raise ValueError(f"Wrong battery input value, must be (0 <=> 100), got ({value}).")
 
     @property
     def animation_step(self):
@@ -145,9 +147,11 @@ class Drone:
 
     @animation_step.setter
     def animation_step(self, step: int):
-        if not 0 <= step <= self.animation_len:
+        if 0 <= step <= self.animation_len:
+            self._animation_step = step
+        else:
             raise ValueError(f"Wrong value, the step value:{step} will be ignored, animation step must be between 0 and {self.animation_len}")
-        self._animation_step = step
+
 
     def get_frame(self, frame_index: int) -> Optional[Tuple[int, Point, Color]]:
         return self.animation.get_frame(frame_index)

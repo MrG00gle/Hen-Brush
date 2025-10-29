@@ -1,6 +1,6 @@
 import pytest
 import logging
-from .SimpleScheduler import SimpleScheduler
+from .DroneScheduler import DroneScheduler
 from ..common import *
 from ..common.testing import generate_drones
 
@@ -25,7 +25,7 @@ class TestSimpleScheduler:
                     anim_status = "READY"
             logging.debug(f"Drone: {drone.id}, Step: {drone.animation_step}, Status: {anim_status}")
 
-        scheduler = SimpleScheduler(drones=drones, operation=operation, daemon=False)
+        scheduler = DroneScheduler(drones=drones, operation=operation, daemon=False)
         scheduler.start()
         for thread in scheduler.threads:
             thread.join()

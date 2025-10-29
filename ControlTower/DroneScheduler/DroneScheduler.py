@@ -22,7 +22,7 @@ from typing import List, Callable
 from ..common import *
 
 
-class SimpleScheduler:
+class DroneScheduler:
 
     threads: List[Thread]
     drones: List[Drone]

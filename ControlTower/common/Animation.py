@@ -15,6 +15,7 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
+import logging
 import pathlib
 from dataclasses import dataclass
 from typing import Tuple, List, Optional
@@ -52,9 +53,18 @@ class Animation:
             yield timestamp, point, color
 
     def get_frame(self, index: int) -> Optional[Tuple[int, Point, Color]]:
+        """
+        Method for getting animation frame by index, in case of IndexError will return None.
+
+        :param index: The index of a frame
+
+        :return: None if index is out of range
+        """
         try:
             return self.timestamps[index], self.flight_path[index], self.colors[index]
         except IndexError:
+            logging.error(f"Passed Animation index for Drone: {self.path.name}, is out of range.")
+        finally:
             return None
 
     def get_index(self, frame: Tuple[int, Point, Color]) -> Optional[int]:
@@ -62,4 +72,4 @@ class Animation:
         try:
             return self.timestamps.index(timestamp)
         except ValueError:
-            return None
+            logging.error(f"Passed frame is not present in Animation of Drone: {self.path.name}")

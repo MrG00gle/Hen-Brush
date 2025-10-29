@@ -35,3 +35,12 @@ class ConfigFileKeyError(Exception):
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)
+
+class SerialError(Exception):
+    """
+    Custom error for SerialHandler class.
+    Raised when class cant open serial port.
+    """
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)

@@ -20,7 +20,7 @@ from typing import List
 
 from .common import *
 from .Loader.Loader import Loader
-from .SimpleScheduler.SimpleScheduler import SimpleScheduler
+from .DroneScheduler.DroneScheduler import DroneScheduler
 
 
 class ControlTower:
