@@ -25,6 +25,7 @@
         enable = true;
         requirements = ''
         pip
+        colorama
         pytest
         numpy
         pyserial

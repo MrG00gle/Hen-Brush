@@ -1,12 +1,11 @@
-import pytest
 import logging
-from ControlTower.common.TelemetryPacket import TelemetryPacket
+from ControlTower.BinaryComHandler.payload.TelemetryPayload import TelemetryPayload
 from ControlTower.common.Point import Point
 from ControlTower.common.Color import Color
 from ControlTower.common.DroneStatus import DroneStatus
 from ControlTower.common.DroneAnimationSatus import DroneAnimationStatus
 
-class TestTelemetryPacket:
+class TestTelemetryPayload:
 
     def test_init(self):
         packet_bytes = bytes([
@@ -19,7 +18,7 @@ class TestTelemetryPacket:
             0x01  # drone_animation_status = 1
         ])
 
-        telemetry_packet = TelemetryPacket(packet=packet_bytes)
+        telemetry_packet = TelemetryPayload(packet=packet_bytes)
         logging.debug(telemetry_packet)
         assert telemetry_packet.drone_id == 10
         assert telemetry_packet.point == Point(2.0, -1.5, 0.0)

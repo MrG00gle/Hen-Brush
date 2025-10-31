@@ -18,13 +18,13 @@
 
 import numpy as np
 from dataclasses import dataclass
-from .Point import Point
-from .Color import Color
-from .DroneStatus import DroneStatus
-from .DroneAnimationSatus import DroneAnimationStatus
+from ControlTower.common.Point import Point
+from ControlTower.common.Color import Color
+from ControlTower.common.DroneStatus import DroneStatus
+from ControlTower.common.DroneAnimationSatus import DroneAnimationStatus
 
 @dataclass
-class TelemetryPacket:
+class TelemetryPayload:
     _drone_id: int
     _point: Point
     _color: Color
@@ -34,12 +34,12 @@ class TelemetryPacket:
 
     def __init__(self, packet: bytes):
         self._packet = packet
-        self.__decode_packet()
+        self.__decode_payload()
 
     def __repr__(self) -> str:
         return f"TelemetryPacket(Id: {self._drone_id}, Point: {self._point}, Color: {self._color}, Drone_Status: {self._drone_status}, Drone_Anim_Status: {self._drone_animation_status})"
 
-    def __decode_packet(self):
+    def __decode_payload(self):
         """
         Decode a binary packet received over serial.
 

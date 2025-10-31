@@ -20,30 +20,30 @@ import struct
 import numpy as np
 from dataclasses import dataclass
 
-from .Command import Command
-from .Point import Point
-from .Color import Color
+from ControlTower.common.Command import Command
+from ControlTower.common.Point import Point
+from ControlTower.common.Color import Color
 
 
 @dataclass
-class PointPacket:
+class PointPayload:
     _drone_id: int
     _command: Command
     _point: Point
     _color: Color
-    _packet: bytes
+    _payload: bytes
 
     def __init__(self, drone_id: int, point: Point, color: Color, command: Command = Command.POSITION):
         self._drone_id = drone_id
         self._command = command
         self._point = point
         self._color = color
-        self.__create_packet()
+        self.__create_payload()
 
     def __repr__(self) -> str:
-        return f"PointPacket(ID: {self._drone_id}, COMMAND: {self._command}, POINT: {self._point}, COLOR: {self._color}, PACKET: {self._packet.hex()})"
+        return f"PointPacket(ID: {self._drone_id}, COMMAND: {self._command}, POINT: {self._point}, COLOR: {self._color}, PACKET: {self._payload.hex()})"
 
-    def __create_packet(self):
+    def __create_payload(self):
         """
         Creates a binary packet for drone communication using half-precision floats.
         """
@@ -71,7 +71,7 @@ class PointPacket:
         z_bytes = np.float16(self._point.Z).tobytes()
 
         # Pack data: B (unsigned char, 1 byte), 2s (2-byte string for float16), B for RGB
-        self._packet = struct.pack(
+        self._payload = struct.pack(
             'BB2s2s2sBBB',
             self._drone_id,
             self._command.value,
@@ -101,4 +101,4 @@ class PointPacket:
 
     @property
     def packet(self):
-        return self._packet
+        return self._payload

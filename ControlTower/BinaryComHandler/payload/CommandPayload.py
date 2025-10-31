@@ -19,26 +19,27 @@
 import struct
 import numpy as np
 from dataclasses import dataclass
-from .Command import Command
+from ControlTower.common.Command import Command
 
 
 @dataclass
-class CommandPacket:
+class CommandPayload:
     _drone_id: int
     _command: Command
-    _packet: bytes
+    _payload: bytes
 
     def __init__(self, drone_id: int, command: Command):
         self._drone_id = drone_id
         self._command = command
-        self.__create_packet()
+        self.__create_payload()
 
     def __repr__(self) -> str:
-        return f"CommandPacket(ID: {self._drone_id}, COMMAND: {self._command.value}, PACKET: {self._packet.hex()})"
+        return f"CommandPayload(ID: {self._drone_id}, COMMAND: {self._command.value}, PACKET: {self._payload.hex()})"
 
-    def __create_packet(self):
+    def __create_payload(self):
         """
-        Creates a packet with a 1-byte command_id for drone communication.
+        Creates a payload with a 1-byte command_id for drone communication.
+        Drone_id (1) + Command (1)
 
         Raises:
             ValueError: If drone_id is not in valid range (0-255)
@@ -50,7 +51,7 @@ class CommandPacket:
             raise ValueError("command must be between 0 and 255")
 
         # Pack data: B (unsigned char, 1 byte)
-        self._packet = struct.pack(
+        self._payload = struct.pack(
             'BB',
             self._drone_id,
             self._command.value
@@ -66,4 +67,4 @@ class CommandPacket:
 
     @property
     def packet(self):
-        return self._packet
+        return self._payload
