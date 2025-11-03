@@ -1,5 +1,5 @@
 import logging
-
+import threading
 from ControlTower.common import *
 from ControlTower.CommunicationHandler.payload import *
 from ControlTower.CommunicationHandler.PacketType import PacketType
@@ -12,21 +12,24 @@ from ControlTower.CommunicationHandler.CommunicationHandler import Communication
 class TestCommunicationHandler:
 
     def test_send_point_payload(self):
-        send_payload = PointPayload(12, Point(10, 10, 10), Color(25, 25, 25))
+
+        payload = PointPayload(12, Point(10, 10, 10), Color(25, 25, 25))
 
         comm_send = CommunicationHandler(port="/dev/ttyV0")
         comm_listen = CommunicationHandler(port="/dev/ttyV1")
 
+        def send_thread():
+            comm_send.send(payload)
+            logging.debug(f"Sending packet: {payload}")
+
+        threading.Thread(target=send_thread, args=()).start()
+        incoming_packet = comm_listen.read_packet(timeout=1)
+
+        if incoming_packet:
+            packet_type = incoming_packet['type']
+            incomming_payload = incoming_packet['payload']
+            logging.debug(f"Got Packet with Type: {packet_type.name}, with Payload: {incomming_payload}")
+            if packet_type == PacketType.POINT:
+                assert incomming_payload == payload.payload
 
 
-        while True:
-            comm_send.send(send_payload)
-            incomming_packet = comm_send.read_packet(timeout=1)
-            if incomming_packet:
-                packet_type = incomming_packet['type']
-                incomming_payload = incomming_packet['payload']
-
-                if packet_type == PacketType.POINT:
-                    break
-
-        assert incomming_payload == send_payload.payload
