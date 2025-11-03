@@ -1,7 +1,7 @@
 import logging
 from ControlTower.common.Point import Point
 from ControlTower.common.Color import Color
-from ControlTower.BinaryComHandler.payload.PointPayload import PointPayload
+from ControlTower.CommunicationHandler.payload.PointPayload import PointPayload
 
 
 class TestPointPayload:
@@ -14,4 +14,4 @@ class TestPointPayload:
         logging.debug(f"Packet (hex): {pac.packet.hex()}")
         logging.debug(f"Packet length: {len(pac.packet)} bytes")
         assert str(pac.packet.hex()) == "0104663c66409a4264c87d"
-        assert {len(pac.packet)} == 11
+        assert len(pac.packet) == 11

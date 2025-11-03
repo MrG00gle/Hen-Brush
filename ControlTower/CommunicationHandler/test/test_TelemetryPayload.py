@@ -1,9 +1,9 @@
 import logging
-from ControlTower.BinaryComHandler.payload.TelemetryPayload import TelemetryPayload
+from ControlTower.CommunicationHandler.payload.TelemetryPayload import TelemetryPayload
 from ControlTower.common.Point import Point
 from ControlTower.common.Color import Color
 from ControlTower.common.DroneStatus import DroneStatus
-from ControlTower.common.DroneAnimationSatus import DroneAnimationStatus
+
 
 class TestTelemetryPayload:
 
@@ -18,10 +18,10 @@ class TestTelemetryPayload:
             0x01  # drone_animation_status = 1
         ])
 
-        telemetry_packet = TelemetryPayload(packet=packet_bytes)
+        telemetry_packet = TelemetryPayload(payload=packet_bytes)
         logging.debug(telemetry_packet)
         assert telemetry_packet.drone_id == 10
         assert telemetry_packet.point == Point(2.0, -1.5, 0.0)
         assert telemetry_packet.color == Color(255, 0, 128)
         assert telemetry_packet.drone_status == DroneStatus.OK
-        assert telemetry_packet.drone_animation_status == DroneAnimationStatus.LIVE
+

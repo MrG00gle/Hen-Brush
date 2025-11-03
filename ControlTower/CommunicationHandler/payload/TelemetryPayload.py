@@ -21,7 +21,6 @@ from dataclasses import dataclass
 from ControlTower.common.Point import Point
 from ControlTower.common.Color import Color
 from ControlTower.common.DroneStatus import DroneStatus
-from ControlTower.common.DroneAnimationSatus import DroneAnimationStatus
 
 @dataclass
 class TelemetryPayload:
@@ -29,30 +28,29 @@ class TelemetryPayload:
     _point: Point
     _color: Color
     _drone_status: DroneStatus
-    _drone_animation_status: DroneAnimationStatus
-    _packet: bytes
 
-    def __init__(self, packet: bytes):
-        self._packet = packet
+    _payload: bytes
+
+    def __init__(self, payload: bytes):
+        self._payload = payload
         self.__decode_payload()
 
     def __repr__(self) -> str:
-        return f"TelemetryPacket(Id: {self._drone_id}, Point: {self._point}, Color: {self._color}, Drone_Status: {self._drone_status}, Drone_Anim_Status: {self._drone_animation_status})"
+        return f"TelemetryPayload(Id: {self._drone_id}, Point: {self._point}, Color: {self._color}, Drone_Status: {self._drone_status})"
 
     def __decode_payload(self):
         """
-        Decode a binary packet received over serial.
+        Decode a binary payload received over serial.
 
-        Packet layout (12 bytes total):
+        Payload layout (12 bytes total):
           - drone_id                : uint8   (1 byte)
           - x, y, z (coordinates)  : float16 (2 bytes each)  → 6 bytes
           - r, g, b (color)        : uint8   (1 byte each)   → 3 bytes
           - drone_status           : uint8   (1 byte)
-          - drone_animation_status : uint8   (1 byte)
 
         Parameters
         ----------
-        packet: bytes
+        payload: bytes
             Exactly 12 bytes read from the serial port.
 
         Raises
@@ -61,28 +59,26 @@ class TelemetryPayload:
             If the byte string length is not 12.
         """
 
-        if len(self._packet) != 12:
-            raise ValueError(f"Expected 12 bytes, got {len(self._packet)}")
+        if len(self._payload) != 12:
+            raise ValueError(f"Expected 12 bytes, got {len(self._payload)}")
 
             # Interpret the entire byte string as uint8
-        data = np.frombuffer(self._packet, dtype=np.uint8)
+        data = np.frombuffer(self._payload, dtype=np.uint8)
 
         drone_id = int(data[0])
         r, g, b = int(data[7]), int(data[8]), int(data[9])
         drone_status = int(data[10])
-        drone_animation_status = int(data[11])
 
         # Reinterpret specific 2-byte regions as float16
         dtype = f'{'>'}f2'
-        x = np.frombuffer(self._packet[1:3], dtype=dtype)[0]
-        y = np.frombuffer(self._packet[3:5], dtype=dtype)[0]
-        z = np.frombuffer(self._packet[5:7], dtype=dtype)[0]
+        x = np.frombuffer(self._payload[1:3], dtype=dtype)[0]
+        y = np.frombuffer(self._payload[3:5], dtype=dtype)[0]
+        z = np.frombuffer(self._payload[5:7], dtype=dtype)[0]
 
         self._drone_id = drone_id
         self._point = Point(x=float(x), y=float(y), z=float(z))
         self._color = Color(r, g, b)
         self._drone_status = DroneStatus(drone_status)
-        self._drone_animation_status = DroneAnimationStatus(drone_animation_status)
 
 
     @property
@@ -102,9 +98,5 @@ class TelemetryPayload:
         return self._drone_status
 
     @property
-    def drone_animation_status(self):
-        return self._drone_animation_status
-
-    @property
-    def packet(self):
-        return self._packet
+    def payload(self):
+        return self._payload

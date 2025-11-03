@@ -10,6 +10,7 @@
   
 
   packages = [
+    pkgs.socat
     pkgs.python312Packages.pygobject3
     pkgs.gobject-introspection
     pkgs.gtk4

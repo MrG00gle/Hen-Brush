@@ -33,7 +33,7 @@ class PointPayload:
     _color: Color
     _payload: bytes
 
-    def __init__(self, drone_id: int, point: Point, color: Color, command: Command = Command.POSITION):
+    def __init__(self, drone_id: int, point: Point, color: Color, command: Command = Command.POSITION_COLOR):
         self._drone_id = drone_id
         self._command = command
         self._point = point
@@ -100,5 +100,5 @@ class PointPayload:
         return self._color
 
     @property
-    def packet(self):
+    def payload(self):
         return self._payload

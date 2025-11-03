@@ -38,7 +38,7 @@ class ConfigFileKeyError(Exception):
 
 class SerialError(Exception):
     """
-    Custom error for BinaryComHandler class.
+    Custom error for CommunicationHandler class.
     Raised when class cant open serial port.
     """
     def __init__(self, message):

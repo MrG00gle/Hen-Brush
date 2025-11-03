@@ -1,12 +1,12 @@
 import pytest
 import logging
-from .DroneScheduler import DroneScheduler
+from .Scheduler import Scheduler
 from ..common import *
 from ..common.testing import generate_drones
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
 
-class TestSimpleScheduler:
+class TestScheduler:
 
     def test_start(self):
 
@@ -25,7 +25,7 @@ class TestSimpleScheduler:
                     anim_status = "READY"
             logging.debug(f"Drone: {drone.id}, Step: {drone.animation_step}, Status: {anim_status}")
 
-        scheduler = DroneScheduler(drones=drones, operation=operation, daemon=False)
+        scheduler = Scheduler(drones=drones, operation=operation, daemon=False)
         scheduler.start()
         for thread in scheduler.threads:
             thread.join()

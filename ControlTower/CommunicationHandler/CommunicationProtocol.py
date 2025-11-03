@@ -4,13 +4,13 @@ import time
 from .PacketType import PacketType
 
 
-class BinaryProtocol:
+class CommunicationProtocol:
     ser: serial.Serial
     HEADER = b'\xAA\x55'
     FOOTER = b'\x55\xAA'
 
-    def __init__(self, port, baudrate=9600):
-        self.ser = serial.Serial(port, baudrate, timeout=1)
+    def __init__(self, port: str, baudrate: int = 9600, timeout: int = 1):
+        self.ser = serial.Serial(port=port, baudrate=baudrate, timeout=timeout)
 
     def calculate_checksum(self, data):
         """Simple XOR checksum"""
@@ -168,7 +168,7 @@ class BinaryProtocol:
 
 # Usage
 def main():
-    protocol = BinaryProtocol('/dev/ttyUSB0')
+    protocol = CommunicationProtocol('/dev/ttyUSB0')
 
     try:
         # Test ping

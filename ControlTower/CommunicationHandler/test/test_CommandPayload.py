@@ -1,5 +1,5 @@
 from ControlTower.common.Command import Command
-from ControlTower.BinaryComHandler.payload.CommandPayload import CommandPayload
+from ControlTower.CommunicationHandler.payload.CommandPayload import CommandPayload
 
 class TestCommandPayload:
 
