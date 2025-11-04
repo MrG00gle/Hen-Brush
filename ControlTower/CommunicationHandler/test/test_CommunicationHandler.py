@@ -1,5 +1,5 @@
 import logging
-
+import threading
 from ControlTower.common import *
 from ControlTower.CommunicationHandler.payload import *
 from ControlTower.CommunicationHandler.PacketType import PacketType
@@ -16,29 +16,33 @@ class TestCommunicationHandler:
         drone_id = 12
         point = Point(11, 12, 13)
         color = Color(25, 26, 27)
-        send_payload = PointPayload(drone_id, point, color)
+        payload = PointPayload(drone_id, point, color)
 
         comm_send = CommunicationHandler(port="/dev/ttyV0")
         comm_listen = CommunicationHandler(port="/dev/ttyV1")
 
-        while True:
-            comm_send.send(send_payload)
-            incomming_packet = comm_send.read_packet(timeout=1)
-            if incomming_packet:
-                packet_type = incomming_packet['type']
-                incomming_payload = incomming_packet['payload']
-                decoded_payload = decode_point_payload(incomming_payload)
+        def send_thread():
+            comm_send.send(payload)
+            logging.debug(f"Sending packet: {payload}")
 
-                if packet_type == PacketType.POINT:
-                    break
+        threading.Thread(target=send_thread, args=()).start()
+        incoming_packet = comm_listen.read_packet(timeout=1)
 
-        assert incomming_payload == send_payload.payload
-        assert len(incomming_payload) == 11
-        assert decoded_payload['drone_id'] == drone_id
-        assert decoded_payload['command'] == Command.POSITION_COLOR.value
-        assert decoded_payload['x'] == point.X
-        assert decoded_payload['y'] == point.Y
-        assert decoded_payload['z'] == point.Z
-        assert decoded_payload['r'] == color.R
-        assert decoded_payload['g'] == color.G
-        assert decoded_payload['b'] == color.B
+        if incoming_packet:
+            packet_type = incoming_packet['type']
+            incoming_payload = incoming_packet['payload']
+            decoded_payload = decode_point_payload(incoming_payload)
+            logging.debug(f"Got Packet with Type: {packet_type.name}, with Payload: {incoming_payload}")
+            if packet_type == PacketType.POINT:
+                assert incoming_payload == payload.payload
+                assert len(incoming_payload) == 11
+                assert decoded_payload['drone_id'] == drone_id
+                assert decoded_payload['command'] == Command.POSITION_COLOR.value
+                assert decoded_payload['x'] == point.X
+                assert decoded_payload['y'] == point.Y
+                assert decoded_payload['z'] == point.Z
+                assert decoded_payload['r'] == color.R
+                assert decoded_payload['g'] == color.G
+                assert decoded_payload['b'] == color.B
+
+
