@@ -38,7 +38,7 @@ class CommunicationHandler(CommunicationProtocol):
 
     def send(self, payload: Union[PointPayload, CommandPayload]) -> None:
         """
-            Send data packet without waiting on ACK
+            Send data payload without waiting on ACK
         """
         logging.debug(f"Sending: {payload}")
 

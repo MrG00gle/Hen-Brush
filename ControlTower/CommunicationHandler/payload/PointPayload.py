@@ -45,7 +45,9 @@ class PointPayload:
 
     def __create_payload(self):
         """
-        Creates a binary packet for drone communication using half-precision floats.
+        Creates a binary payload for drone communication protocol using half-precision floats.
+        drone_id (1 byte) + command (1 byte) + x,y,z (each 2 bytes), r,g,b (each 1 byte)
+        Total length 12 bytes.
         """
 
         # Validate integer inputs

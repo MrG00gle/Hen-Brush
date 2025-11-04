@@ -66,5 +66,5 @@ class CommandPayload:
         return self._command
 
     @property
-    def packet(self):
+    def payload(self):
         return self._payload

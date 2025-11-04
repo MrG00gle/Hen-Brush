@@ -20,7 +20,7 @@ class CommunicationProtocol:
         return checksum
 
     def create_packet(self, packet_type, payload=b''):
-        """Create binary packet"""
+        """Create binary payload"""
         # Header (2) + Type (1) + Length (1) + Payload (N) + Checksum (1) + Footer (2)
         length = len(payload)
 
@@ -39,13 +39,13 @@ class CommunicationProtocol:
         return packet
 
     def send_packet(self, packet_type, payload=b''):
-        """Send binary packet"""
+        """Send binary payload"""
         packet = self.create_packet(packet_type, payload)
         self.ser.write(packet)
         return packet
 
     def read_packet(self, timeout=5):
-        """Read and parse binary packet"""
+        """Read and parse binary payload"""
         start_time = time.time()
         buffer = b''
 
@@ -54,7 +54,7 @@ class CommunicationProtocol:
                 chunk = self.ser.read(self.ser.in_waiting)
                 buffer += chunk
 
-                # Look for complete packet
+                # Look for complete payload
                 packet = self.parse_packet(buffer)
                 if packet:
                     return packet
@@ -64,7 +64,7 @@ class CommunicationProtocol:
         return None
 
     def parse_packet(self, buffer):
-        """Parse binary packet from buffer"""
+        """Parse binary payload from buffer"""
         # Find header
         header_pos = buffer.find(self.HEADER)
         if header_pos == -1:
@@ -74,16 +74,16 @@ class CommunicationProtocol:
         if len(buffer) < header_pos + 4:
             return None
 
-        # Extract packet info
+        # Extract payload info
         packet_type = buffer[header_pos + 2]
         payload_length = buffer[header_pos + 3]
 
-        # Check if we have complete packet
+        # Check if we have complete payload
         total_length = 2 + 1 + 1 + payload_length + 1 + 2  # Header + Type + Len + Payload + Checksum + Footer
         if len(buffer) < header_pos + total_length:
             return None
 
-        # Extract complete packet
+        # Extract complete payload
         packet_end = header_pos + total_length
         packet_data = buffer[header_pos:packet_end]
 
@@ -120,7 +120,7 @@ class CommunicationProtocol:
             return False
 
     def send_data(self, data):
-        """Send data packet"""
+        """Send data payload"""
         if isinstance(data, str):
             data = data.encode('utf-8')
 
@@ -150,7 +150,7 @@ class CommunicationProtocol:
 
                     print(f"📥 Received {packet_type.name}: {payload}")
 
-                    # Respond to different packet types
+                    # Respond to different payload types
                     if packet_type == PacketType.PING:
                         self.send_packet(PacketType.PONG)
                         print("📤 Sent PONG response")
