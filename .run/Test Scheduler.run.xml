@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test DroneScheduler" type="tests" factoryName="Autodetect">
+  <configuration default="false" name="Test Scheduler" type="tests" factoryName="Autodetect">
     <module name="Hen-Brush" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />

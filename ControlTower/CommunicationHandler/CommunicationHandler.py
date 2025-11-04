@@ -18,8 +18,9 @@
 
 
 import logging
-from typing import Union, ByteString
+from typing import Union, Any, Generator
 
+from ControlTower.CommunicationHandler.payload import TelemetryPayload
 from ..common import *
 from .payload import *
 from .PacketType import PacketType
@@ -50,24 +51,22 @@ class CommunicationHandler(CommunicationProtocol):
             case _:
                 raise ValueError(f"Payload can't be type: {type(payload)}")
 
-    def listen(self) -> TelemetryPayload | None:
+    def listen(self) -> Generator[TelemetryPayload, None]:
         """
             Listen for Telemetry packets, parse and return Telemetry Payload
         """
+        while self.ser.is_open:
+            packet = self.read_packet(timeout=self.timeout)
 
-        packet = self.read_packet(timeout=self.timeout)
+            if packet:
+                packet_type = packet['type']
+                payload = packet['payload']
 
-        if packet:
-            packet_type = packet['type']
-            payload = packet['payload']
-
-            match packet_type:
-                case PacketType.TELEMETRY:
-                    telemetry = TelemetryPayload(payload=payload)
-                    logging.debug(f"Got: {telemetry}")
-                    return telemetry
-        else:
-            return None
+                match packet_type:
+                    case PacketType.TELEMETRY:
+                        telemetry = TelemetryPayload(payload=payload)
+                        logging.debug(f"Got: {telemetry}")
+                        yield telemetry
 
     def close(self):
         self.ser.close()

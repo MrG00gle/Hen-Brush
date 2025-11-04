@@ -15,6 +15,8 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
+
+
 import logging
 import pathlib
 from dataclasses import dataclass
@@ -52,20 +54,23 @@ class Animation:
                                            reversed(self.colors)):
             yield timestamp, point, color
 
-    def get_frame(self, index: int) -> Optional[Tuple[int, Point, Color]]:
+    def get_frame(self, index: int) -> Tuple[int, Point, Color] | None:
         """
         Method for getting animation frame by index, in case of IndexError will return None.
 
         :param index: The index of a frame
 
-        :return: None if index is out of range
+        :return: Tuple[int, Point, Color] and None if index is out of range
         """
         try:
-            return self.timestamps[index], self.flight_path[index], self.colors[index]
+            timestamp = self.timestamps[index]
+            point = self.flight_path[index]
+            color = self.colors[index]
+            return timestamp, point, color
         except IndexError:
             logging.error(f"Passed Animation index for Drone: {self.path.name}, is out of range.")
-        finally:
             return None
+
 
     def get_index(self, frame: Tuple[int, Point, Color]) -> Optional[int]:
         timestamp, _, _ = frame

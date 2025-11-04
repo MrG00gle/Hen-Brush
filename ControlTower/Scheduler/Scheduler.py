@@ -18,7 +18,9 @@
 
 import time
 from threading import Thread
-from typing import List, Callable
+from typing import List, Callable, Iterable
+
+from ..CommunicationHandler.payload import TelemetryPayload
 from ..common import *
 
 
@@ -27,12 +29,12 @@ class Scheduler:
     threads: List[Thread]
     drones: List[Drone]
 
-    def __init__(self, drones: List[Drone], operation: Callable[[Drone], None], daemon: bool = False):
+    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], listener_operation: Callable[[], Iterable[TelemetryPayload]], daemon: bool = False):
         self.drones = drones
         self.threads = []
-        self.add_thread(operation=operation, drones=self.drones, daemon=daemon)
+        self.add_dispatcher_thread(operation=dispatcher_operation, drones=self.drones, daemon=daemon)
 
-    def thread(self, drone: Drone, operation):
+    def __dispatcher_thread(self, drone: Drone, operation: Callable[[Drone], None]):
         drone.animation_status = DroneAnimationStatus.LIVE
         for step in range(drone.animation_len):
 
@@ -55,9 +57,12 @@ class Scheduler:
                 case _:
                     continue
 
-    def add_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
+    def __listener_thread(self, operation: Callable[[], Iterable[TelemetryPayload]]):
+        pass
+
+    def add_dispatcher_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
-            self.threads.append(Thread(name=str(drone.id), target=self.thread, args=(drone, operation), daemon=daemon))
+            self.threads.append(Thread(name=str(drone.id), target=self.__dispatcher_thread, args=(drone, operation), daemon=daemon))
         self.threads.sort(key=lambda thread: int(thread.name))
 
     def start(self, drones: List[Drone] = None):

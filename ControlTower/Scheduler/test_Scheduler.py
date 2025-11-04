@@ -9,8 +9,12 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(mes
 class TestScheduler:
 
     def test_start(self):
-
+        """
+        Simple test to make sure that the scheduler is working.
+        """
         drones = generate_drones(num_drones=3, anim_lenght=20)
+        for drone in drones:
+            logging.debug(f"Created Drone: {drone}")
 
         def operation(drone: Drone) -> None:
             anim_status = ""

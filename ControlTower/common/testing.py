@@ -92,7 +92,7 @@ def generate_flight_paths(
             new_z = max(min_z, new_z)
 
             # Create new Point object
-            new_point = Point(new_x, new_y, new_z)
+            new_point = Point(round(new_x, 2), round(new_y, 2), round(new_z, 2))
             path.append(new_point)
 
         paths.append(path)
