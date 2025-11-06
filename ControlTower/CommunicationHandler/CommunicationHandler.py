@@ -65,7 +65,7 @@ class CommunicationHandler(CommunicationProtocol):
                 match packet_type:
                     case PacketType.TELEMETRY:
                         telemetry = TelemetryPayload(payload=payload)
-                        logging.debug(f"Got: {telemetry}")
+                        logging.debug(f"Decoded: {telemetry}")
                         yield telemetry
 
     def close(self):

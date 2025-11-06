@@ -29,7 +29,7 @@ class Scheduler:
     threads: List[Thread]
     drones: List[Drone]
 
-    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], daemon: bool = False):
+    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], operation: Callable[[], Iterable[TelemetryPayload]], daemon: bool = False):
         self.drones = drones
         self.threads = []
         self.add_dispatcher_thread(operation=dispatcher_operation, drones=self.drones, daemon=daemon)
@@ -58,7 +58,10 @@ class Scheduler:
                     continue
 
     def __listener_thread(self, operation: Callable[[], Iterable[TelemetryPayload]]):
-        pass
+        for payload in operation():
+            drone = self.drones[payload.drone_id]
+            drone.status = payload.drone_status
+            drone.reported_position = payload.point
 
     def add_dispatcher_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
