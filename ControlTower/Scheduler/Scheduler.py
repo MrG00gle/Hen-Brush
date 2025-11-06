@@ -29,7 +29,7 @@ class Scheduler:
     threads: List[Thread]
     drones: List[Drone]
 
-    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], listener_operation: Callable[[], Iterable[TelemetryPayload]], daemon: bool = False):
+    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], daemon: bool = False):
         self.drones = drones
         self.threads = []
         self.add_dispatcher_thread(operation=dispatcher_operation, drones=self.drones, daemon=daemon)
@@ -38,7 +38,7 @@ class Scheduler:
         drone.animation_status = DroneAnimationStatus.LIVE
         for step in range(drone.animation_len):
 
-            if step == drone.animation_len:
+            if step == drone.animation_len - 1:
                 s_duration = float(abs(drone.get_frame(step)[0] - drone.get_frame(step - 1)[0])) / 1000
             else:
                 s_duration = float(abs(drone.get_frame(step + 1)[0] - drone.get_frame(step)[0])) / 1000

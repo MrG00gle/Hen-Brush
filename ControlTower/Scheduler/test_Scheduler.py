@@ -29,7 +29,7 @@ class TestScheduler:
                     anim_status = "READY"
             logging.debug(f"Drone: {drone.id}, Step: {drone.animation_step}, Status: {anim_status}")
 
-        scheduler = Scheduler(drones=drones, operation=operation, daemon=False)
+        scheduler = Scheduler(drones=drones, dispatcher_operation=operation, daemon=False)
         scheduler.start()
         for thread in scheduler.threads:
             thread.join()
