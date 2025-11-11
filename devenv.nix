@@ -16,6 +16,7 @@
     pkgs.gtk4
     pkgs.libadwaita
     pkgs.gst_all_1.gst-plugins-base
+    pkgs.zlib
   ];
 
 
