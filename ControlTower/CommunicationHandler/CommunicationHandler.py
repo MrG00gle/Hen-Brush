@@ -51,7 +51,7 @@ class CommunicationHandler(CommunicationProtocol):
             case _:
                 raise ValueError(f"Payload can't be type: {type(payload)}")
 
-    def listen(self) -> Generator[TelemetryPayload, None]:
+    def listen(self) -> Generator[TelemetryPayload, None, None]:
         """
             Listen for Telemetry packets, parse and return Telemetry Payload
         """
@@ -67,6 +67,8 @@ class CommunicationHandler(CommunicationProtocol):
                         telemetry = TelemetryPayload(payload=payload)
                         logging.debug(f"Decoded: {telemetry}")
                         yield telemetry
+            else:
+                yield None
 
     def close(self):
         self.ser.close()

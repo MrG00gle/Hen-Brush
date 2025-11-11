@@ -32,6 +32,7 @@
         pyserial
         pycairo
         PyGObject
+        textual
         '';
     };
   };

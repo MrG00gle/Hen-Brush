@@ -59,9 +59,10 @@ class Scheduler:
 
     def __listener_thread(self, operation: Callable[[], Iterable[TelemetryPayload]]):
         for payload in operation():
-            drone = self.drones[payload.drone_id]
-            drone.status = payload.drone_status
-            drone.reported_position = payload.point
+            if payload:
+                drone = self.drones[payload.drone_id]
+                drone.status = payload.drone_status
+                drone.reported_position = payload.point
 
     def add_dispatcher_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
