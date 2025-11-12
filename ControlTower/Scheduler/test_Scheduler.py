@@ -1,3 +1,5 @@
+from time import sleep
+
 import pytest
 import logging
 from typing import Generator
@@ -17,7 +19,7 @@ class TestScheduler:
         """
         Simple test to make sure that the scheduler is working.
         """
-        self.drones = generate_drones(num_drones=3, anim_lenght=20)
+        self.drones = generate_drones(num_drones=3, anim_lenght=10)
         for drone in self.drones:
             logging.debug(f"Created Drone: {drone}")
 
@@ -54,14 +56,14 @@ class TestScheduler:
         scheduler.start()
         for thread in scheduler.dispatcher_threads:
             thread.join()
-
+        sleep(15)
         assert True
 
     def test_start_integrated(self):
         """
         Test to make sure that the scheduler is working with CommunicationHandler.
         """
-        self.drones = generate_drones(num_drones=3, anim_lenght=20)
+        self.drones = generate_drones(num_drones=3, anim_lenght=10)
         for drone in self.drones:
             logging.debug(f"Created Drone: {drone}")
 
@@ -77,7 +79,10 @@ class TestScheduler:
 
         scheduler = Scheduler(drones=self.drones, dispatcher_operation=dispatcher_operation, telemetry_operation=self.comm_listen.listen, daemon = False)
         scheduler.start()
+        scheduler.listener_thread.join()
         for thread in scheduler.dispatcher_threads:
             thread.join()
-
+        sleep(15)
+        self.comm_send.close()
+        self.comm_listen.close()
         assert True

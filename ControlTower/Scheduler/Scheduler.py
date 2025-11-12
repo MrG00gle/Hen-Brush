@@ -16,6 +16,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
 
+import re
 import time
 from threading import Thread
 from typing import List, Callable, Iterable
@@ -68,8 +69,13 @@ class Scheduler:
 
     def add_dispatcher_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
-            self.dispatcher_threads.append(Thread(name=f"Dispatcher_Drone({drone.id})", target=self.__dispatcher_thread, args=(drone, operation), daemon=daemon))
-        self.dispatcher_threads.sort(key=lambda thread: int(thread.name))
+            self.dispatcher_threads.append(Thread(name=f"Dispatcher_Thread({drone.id})", target=self.__dispatcher_thread, args=(drone, operation), daemon=daemon))
+
+        id_re = re.compile(r"Dispatcher_Thread\((\d+)\)")
+
+        self.dispatcher_threads.sort(
+            key=lambda t: int(id_re.search(t.name).group(1)) if id_re.search(t.name) else float('inf')
+        )
 
     def start(self, drones: List[Drone] = None):
         self.listener_thread.start()
