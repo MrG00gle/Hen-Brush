@@ -15,19 +15,20 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-import pathlib
+
 from typing import List
 
-from .common import *
-from .Loader.Loader import Loader
+from ControlTower.common import *
+from ControlTower.Loader.Loader import Loader
+from ControlTower.CommunicationHandler.CommunicationHandler import CommunicationHandler
 from ControlTower.Scheduler.Scheduler import Scheduler
 
 
 class ControlTower:
     drones: List[Drone]
+    comm: CommunicationHandler
 
     def __init__(self, path: str):
-        self.drones = Loader(path=path).load()
-
-
-
+        # self.comm = CommunicationHandler()
+        # self.drones = Loader(path=path).load()
+        pass

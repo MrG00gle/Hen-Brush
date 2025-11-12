@@ -41,30 +41,42 @@ class Loader:
         except Exception as e:
             logging.error(f"Encountered unexpected error({e}), while opening provided path: {path}")
 
-    def load_config(self) -> Tuple[str, int, int] or Exception:
+    def load_config(self) -> Tuple[str, int, int] | None:
+        """
+        Method for loading json configuration, with defined structure:
+            {
+              "serial_port": "/dev/ttyUSB0",
+              "serial_speed": 9600,
+              "ping_timeout": 5
+            }
+
+        Returns:
+             serial_port, serial_speed, ping_timeout or in case of error None
+        """
+
         config_file = list(self.path.glob('*.json'))[0]
-        if not config_file:
-            logging.warning(f"No config file with JSON format found in directory: {self.path} \n"
-                            f"Default configuration will be used!")
-        else:
+        if config_file:
             try:
                 with config_file.open('r') as file:
                     config = json.load(file)
                     keys = ['serial_port', 'serial_speed', 'ping_timeout']
                     if  all(key in config for key in keys):
                         serial_port, serial_speed, ping_timeout = str(config['serial_port']), int(config['serial_speed']), int(config['ping_timeout'])
+                        return serial_port, serial_speed, ping_timeout
                     else:
                         raise ConfigFileKeyError(f"Configuration file: {config_file}, misses or does not have conventionally named configuration entry's. Default configuration will be used!")
             except OSError:
                 logging.error(f"Couldn't open/read config file: {config_file}, Default configuration will be used!")
             except ConfigFileKeyError as e:
                 logging.error(str(e))
+                return None
             except Exception as e:
                 logging.error(f"Encountered unexpected error({e}), while working with: {config_file}")
-            else:
-                return serial_port, serial_speed, ping_timeout
-            finally:
-                return Exception
+                return None
+        else:
+            logging.warning(f"No config file with JSON format found in directory: {self.path} \n"
+                            f"Default configuration will be used!")
+            return None
 
     def load_drones(self) -> List[Drone]:
         pattern = "*.csv"
@@ -102,5 +114,16 @@ class Loader:
                 logging.error(f"Encountered unexpected error({e}), while working with: {drone_file}")
         return drones
 
-    def load(self) -> Tuple[str, int, int, List[Drone]] or Tuple[Exception, List[Drone]]:
-        return self.load_config(), self.load_drones()
+    def load(self) -> Tuple[str, int, int, List[Drone]] | List[Drone]:
+        """
+        Methode for loading both config and drone list, or if in selected folder will not have configuration will return just drone list.
+
+        Returns:
+            serial_port, serial_speed, ping_timeout, drones or drones
+        """
+        serial_port, serial_speed, ping_timeout = self.load_config()
+        drones = self.load_drones()
+        if (serial_port, serial_speed, ping_timeout) is not None:
+            return serial_port, serial_speed, ping_timeout, drones
+        else:
+            return drones
