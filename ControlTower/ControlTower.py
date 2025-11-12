@@ -20,7 +20,7 @@ from typing import List
 
 from .common import *
 from .Loader.Loader import Loader
-from .Scheduler.Scheduler import Scheduler
+from ControlTower.Scheduler.Scheduler import Scheduler
 
 
 class ControlTower:
@@ -28,5 +28,6 @@ class ControlTower:
 
     def __init__(self, path: str):
         self.drones = Loader(path=path).load()
+
 
 

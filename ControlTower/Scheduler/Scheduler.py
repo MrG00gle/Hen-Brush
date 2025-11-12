@@ -20,19 +20,21 @@ import time
 from threading import Thread
 from typing import List, Callable, Iterable
 
-from ..CommunicationHandler.payload import TelemetryPayload
-from ..common import *
+from ControlTower.CommunicationHandler.payload import TelemetryPayload
+from ControlTower.common import *
 
 
 class Scheduler:
 
-    threads: List[Thread]
+    dispatcher_threads: List[Thread]
+    listener_thread: Thread
     drones: List[Drone]
 
-    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], operation: Callable[[], Iterable[TelemetryPayload]], daemon: bool = False):
+    def __init__(self, drones: List[Drone], dispatcher_operation: Callable[[Drone], None], telemetry_operation: Callable[[], Iterable[TelemetryPayload]], daemon: bool = False):
         self.drones = drones
-        self.threads = []
+        self.dispatcher_threads = []
         self.add_dispatcher_thread(operation=dispatcher_operation, drones=self.drones, daemon=daemon)
+        self.listener_thread = Thread(name="Listener", target=self.__listener_thread, args=(telemetry_operation, ))
 
     def __dispatcher_thread(self, drone: Drone, operation: Callable[[Drone], None]):
         drone.animation_status = DroneAnimationStatus.LIVE
@@ -57,34 +59,37 @@ class Scheduler:
                 case _:
                     continue
 
-    def __listener_thread(self, operation: Callable[[], Iterable[TelemetryPayload]]):
-        for payload in operation():
-            if payload:
+    def __listener_thread(self, telemetry_operation: Callable[[], Iterable[TelemetryPayload]]):
+        for payload in telemetry_operation():
+            if type(payload) is TelemetryPayload:
                 drone = self.drones[payload.drone_id]
                 drone.status = payload.drone_status
                 drone.reported_position = payload.point
 
     def add_dispatcher_thread(self, operation: Callable[[Drone], None], drones: List[Drone], daemon: bool = False):
         for drone in drones:
-            self.threads.append(Thread(name=str(drone.id), target=self.__dispatcher_thread, args=(drone, operation), daemon=daemon))
-        self.threads.sort(key=lambda thread: int(thread.name))
+            self.dispatcher_threads.append(Thread(name=f"Dispatcher_Drone({drone.id})", target=self.__dispatcher_thread, args=(drone, operation), daemon=daemon))
+        self.dispatcher_threads.sort(key=lambda thread: int(thread.name))
 
     def start(self, drones: List[Drone] = None):
+        self.listener_thread.start()
         if drones is None:
             for drone in self.drones:
-               self.threads[drone.id].start()
+               self.dispatcher_threads[drone.id].start()
         else:
             for drone in drones:
-               self.threads[drone.id].start()
+               self.dispatcher_threads[drone.id].start()
 
-    def pause(self, drones: List[Drone]):
-        for drone in drones:
+    def pause(self, drone: List[Drone] | Drone):
+        if type(drone) is list:
+            for d in drone:
+                d.animation_status = DroneAnimationStatus.PAUSED
+        elif type(drone) is Drone:
             drone.animation_status = DroneAnimationStatus.PAUSED
 
-    def stop(self, drones: List[Drone] = None):
-        if drones is None:
-            for drone in self.drones:
-                drone.animation_status = DroneAnimationStatus.ENDED
-        else:
-            for drone in drones:
-                drone.animation_status = DroneAnimationStatus.ENDED
+    def stop(self, drone: List[Drone] | Drone):
+        if type(drone) is list:
+            for d in drone:
+                d.animation_status = DroneAnimationStatus.ENDED
+        elif type(drone) is Drone:
+            drone.animation_status = DroneAnimationStatus.ENDED
