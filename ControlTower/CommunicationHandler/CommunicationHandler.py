@@ -18,10 +18,8 @@
 
 
 import logging
-from typing import Union, Any, Generator
+from typing import Union, Generator
 
-from ControlTower.CommunicationHandler.payload import TelemetryPayload
-from ..common import *
 from .payload import *
 from .PacketType import PacketType
 from .CommunicationProtocol import CommunicationProtocol

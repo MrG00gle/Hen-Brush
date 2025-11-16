@@ -20,9 +20,7 @@ import struct
 import numpy as np
 from dataclasses import dataclass
 
-from ControlTower.common.Command import Command
-from ControlTower.common.Point import Point
-from ControlTower.common.Color import Color
+from ControlTower.common import Command, Point, Color
 
 
 @dataclass

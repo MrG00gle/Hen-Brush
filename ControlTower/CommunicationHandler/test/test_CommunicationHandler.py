@@ -1,10 +1,11 @@
 import logging
 import threading
-from ControlTower.common import *
-from ControlTower.CommunicationHandler.payload import *
-from ControlTower.CommunicationHandler.PacketType import PacketType
-from ControlTower.CommunicationHandler.CommunicationHandler import CommunicationHandler
-from ControlTower.CommunicationHandler.test.test_utils import decode_point_payload
+
+from ControlTower.common import Point, Color, Command
+from ..payload import PointPayload
+from ..PacketType import PacketType
+from ..CommunicationHandler import CommunicationHandler
+from .utils import decode_point_payload
 
 # Important Note! : In order to run this test, you must setup a virtual serial port between "link=/dev/ttyV0" and /dev/ttyV1
 # If you are using Linux system you can use "socat" tool to create a virtual serial port: socat PTY,link=/dev/ttyV0,raw,echo=0 PTY,link=/dev/ttyV1,raw,echo=0

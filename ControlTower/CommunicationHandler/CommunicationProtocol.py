@@ -1,6 +1,7 @@
 import serial
 import struct
 import time
+
 from .PacketType import PacketType
 
 

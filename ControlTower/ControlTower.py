@@ -18,17 +18,15 @@
 
 from typing import List
 
-from ControlTower.common import *
-from ControlTower.Loader.Loader import Loader
-from ControlTower.CommunicationHandler.CommunicationHandler import CommunicationHandler
-from ControlTower.Scheduler.Scheduler import Scheduler
-
+from .common import *
+from .Loader import Loader
+from .Scheduler import Scheduler
+from .CommunicationHandler import CommunicationHandler
 
 class ControlTower:
     drones: List[Drone]
     comm: CommunicationHandler
 
     def __init__(self, path: str):
-        # self.comm = CommunicationHandler()
-        # self.drones = Loader(path=path).load()
-        pass
+        self.comm = CommunicationHandler()
+        self.drones = Loader(path=path).load()

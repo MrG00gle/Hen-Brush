@@ -17,9 +17,9 @@
 """
 
 import struct
-import numpy as np
 from dataclasses import dataclass
-from ControlTower.common.Command import Command
+
+from ControlTower.common import Command
 
 
 @dataclass

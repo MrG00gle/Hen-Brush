@@ -1,6 +1,6 @@
-from ControlTower.common.Command import Command
-from ControlTower.CommunicationHandler.test.test_utils import decode_command_payload
-from ControlTower.CommunicationHandler.payload.CommandPayload import CommandPayload
+from ControlTower.common import Command
+from .utils import decode_command_payload
+from ..payload import CommandPayload
 
 class TestCommandPayload:
 

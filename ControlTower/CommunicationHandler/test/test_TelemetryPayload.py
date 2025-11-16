@@ -1,8 +1,6 @@
 import logging
-from ControlTower.CommunicationHandler.payload.TelemetryPayload import TelemetryPayload
-from ControlTower.common.Point import Point
-from ControlTower.common.Color import Color
-from ControlTower.common.DroneStatus import DroneStatus
+from ..payload.TelemetryPayload import TelemetryPayload
+from ControlTower.common import Point, Color, DroneStatus
 
 
 class TestTelemetryPayload:

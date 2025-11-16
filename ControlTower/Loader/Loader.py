@@ -23,8 +23,7 @@ import pathlib
 import re
 from typing import List, Tuple
 
-from ..common import *
-
+from ControlTower.common import Drone, Animation, Point, Color, ConfigFileKeyError, DroneFileNameReadError
 
 class Loader:
     path: pathlib.Path or pathlib.WindowsPath

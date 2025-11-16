@@ -17,12 +17,12 @@
 """
 
 import re
-import time
 from threading import Thread
+from time import sleep
 from typing import List, Callable, Iterable
 
 from ControlTower.CommunicationHandler.payload import TelemetryPayload
-from ControlTower.common import *
+from ControlTower.common import Drone, DroneAnimationStatus
 
 
 class Scheduler:
@@ -46,7 +46,7 @@ class Scheduler:
             else:
                 s_duration = float(abs(drone.get_frame(step + 1)[0] - drone.get_frame(step)[0])) / 1000
 
-            time.sleep(s_duration)
+            sleep(s_duration)
 
             match drone.animation_status:
                 case DroneAnimationStatus.LIVE:

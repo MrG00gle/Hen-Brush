@@ -1,15 +1,11 @@
 from time import sleep
 
-import pytest
 import logging
 from typing import Generator
 
-from ControlTower.Scheduler.Scheduler import Scheduler
-from ControlTower.CommunicationHandler.CommunicationHandler import CommunicationHandler
-from ControlTower.CommunicationHandler.payload.TelemetryPayload import TelemetryPayload
-from ControlTower.CommunicationHandler.payload.PointPayload import PointPayload
-from ControlTower.common import *
-from ControlTower.common.testing import generate_drones
+from ControlTower.Scheduler import Scheduler
+from ControlTower.CommunicationHandler import CommunicationHandler, TelemetryPayload, PointPayload
+from ControlTower.common import Drone, DroneAnimationStatus, Command, generate_drones
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
 

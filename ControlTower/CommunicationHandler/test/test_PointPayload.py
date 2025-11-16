@@ -1,9 +1,6 @@
-import logging
-from ControlTower.common.Point import Point
-from ControlTower.common.Color import Color
-from ControlTower.common.Command import Command
-from ControlTower.CommunicationHandler.test.test_utils import decode_point_payload
-from ControlTower.CommunicationHandler.payload.PointPayload import PointPayload
+from ControlTower.common import Point, Color, Command
+from .utils import decode_point_payload
+from ..payload.PointPayload import PointPayload
 
 
 class TestPointPayload:

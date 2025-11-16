@@ -18,9 +18,9 @@
 
 import numpy as np
 from dataclasses import dataclass
-from ControlTower.common.Point import Point
-from ControlTower.common.Color import Color
-from ControlTower.common.DroneStatus import DroneStatus
+
+from ControlTower.common import Point, Color, DroneStatus
+
 
 @dataclass
 class TelemetryPayload:

@@ -2,10 +2,8 @@ import random
 import time
 from pathlib import Path
 from typing import List
-from .Point import Point
-from .Color import Color
-from .Drone import Drone
-from .Animation import Animation
+
+from ControlTower.common import Point, Color, Drone, Animation
 
 def generate_timestamps(
         count=10,
