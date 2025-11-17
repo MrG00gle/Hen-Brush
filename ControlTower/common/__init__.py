@@ -6,7 +6,7 @@ if __name__ == "__main__":
     from ControlTower.common.DroneAnimationSatus import DroneAnimationStatus
     from ControlTower.common.DroneStatus import DroneStatus
     from ControlTower.common.Point import Point
-    from ControlTower.common.errors import *
+    from ControlTower.common.errors import ConfigFileKeyError, DroneFileNameReadError, SerialError
 else:
     from .Animation import Animation
     from .Color import Color
@@ -15,5 +15,5 @@ else:
     from .DroneAnimationSatus import DroneAnimationStatus
     from .DroneStatus import DroneStatus
     from .Point import Point
-    from .errors import *
+    from .errors import ConfigFileKeyError, DroneFileNameReadError, SerialError
     from .test import *

@@ -113,7 +113,7 @@ class Loader:
                 logging.error(f"Encountered unexpected error({e}), while working with: {drone_file}")
         return drones
 
-    def load(self) -> Tuple[str, int, int, List[Drone]] | List[Drone]:
+    def load(self) -> Tuple[str, int, int, List[Drone]] | Tuple[None, None, None, List[Drone]]:
         """
         Methode for loading both config and drone list, or if in selected folder will not have configuration will return just drone list.
 
@@ -125,4 +125,4 @@ class Loader:
         if (serial_port, serial_speed, ping_timeout) is not None:
             return serial_port, serial_speed, ping_timeout, drones
         else:
-            return drones
+            return None, None, None, drones
