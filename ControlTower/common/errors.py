@@ -36,6 +36,15 @@ class ConfigFileKeyError(Exception):
         self.message = message
         super().__init__(self.message)
 
+class SerialConfigLoadFailed(Exception):
+    """
+    Custom error for ControlTower class.
+    Raised when no direct serial configuration has been provided and configuration loading from file wasn't successful.
+    """
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
 class SerialError(Exception):
     """
     Custom error for CommunicationHandler class.

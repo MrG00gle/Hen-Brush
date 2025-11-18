@@ -38,7 +38,10 @@ class ControlTower:
             logging.info(f"External serial config detected.")
             self.comm = CommunicationHandler(external_serial_port, external_serial_speed, external_serial_timeout)
         else:
-            raise Exception(f"No serial config detected")
+            logging.error(f"No serial config detected")
+            raise SerialConfigLoadFailed(f"No serial config detected")
+
+
 
         # self.scheduler = Scheduler(drones=self.drones, )
 

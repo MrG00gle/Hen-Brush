@@ -15,7 +15,7 @@ else:
     from .DroneAnimationSatus import DroneAnimationStatus
     from .DroneStatus import DroneStatus
     from .Point import Point
-    from .errors import ConfigFileKeyError, DroneFileNameReadError, SerialError
+    from .errors import ConfigFileKeyError, DroneFileNameReadError, SerialError, SerialConfigLoadFailed
     import test
 
 __all__ = [
@@ -28,5 +28,6 @@ __all__ = [
     "Point",
     "ConfigFileKeyError",
     "DroneFileNameReadError",
-    "SerialError"
+    "SerialError",
+    "SerialConfigLoadFailed"
 ]
