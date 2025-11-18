@@ -35,7 +35,7 @@ class CommunicationHandler(CommunicationProtocol):
         self.timeout = timeout
         super().__init__(port=port, baudrate=baudrate, timeout=timeout)
 
-    def send(self, payload: Union[PointPayload, CommandPayload]) -> None:
+    def send(self, payload: Union[PointPayload, CommandPayload]) -> None:   #TODO: Add PointColorPayload
         """
             Send data payload without waiting on ACK
         """

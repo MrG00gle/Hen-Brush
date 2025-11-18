@@ -1,5 +1,5 @@
 from enum import IntEnum
-
+# TODO: Add Point_Color Type
 class PacketType(IntEnum):
     PING = 0x01
     PONG = 0x02

@@ -52,8 +52,8 @@ class ControlTower:
     def start(self, drones: List[Drone]):
         self.scheduler.start(drones=drones)
 
-    def pause(self, drone: List[Drone] | Drone):
-        self.scheduler.pause(drone)
+    def pause(self, drones: List[Drone]):
+        self.scheduler.pause(drones=drones)
 
-    def stop(self, drone: List[Drone] | Drone):
-        self.scheduler.stop(drone)
+    def stop(self, drones: List[Drone]):
+        self.scheduler.stop(drones=drones)
