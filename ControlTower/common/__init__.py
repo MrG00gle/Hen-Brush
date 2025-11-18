@@ -7,6 +7,7 @@ if __name__ == "__main__":
     from ControlTower.common.DroneStatus import DroneStatus
     from ControlTower.common.Point import Point
     from ControlTower.common.errors import ConfigFileKeyError, DroneFileNameReadError, SerialError
+    from ControlTower.common.test import  generate_timestamps, generate_flight_paths, generate_color_lists, generate_drones
 else:
     from .Animation import Animation
     from .Color import Color
@@ -16,7 +17,7 @@ else:
     from .DroneStatus import DroneStatus
     from .Point import Point
     from .errors import ConfigFileKeyError, DroneFileNameReadError, SerialError, SerialConfigLoadFailed
-    import test
+    from .test import  generate_timestamps, generate_flight_paths, generate_color_lists, generate_drones
 
 __all__ = [
     "Animation",
@@ -29,5 +30,9 @@ __all__ = [
     "ConfigFileKeyError",
     "DroneFileNameReadError",
     "SerialError",
-    "SerialConfigLoadFailed"
+    "SerialConfigLoadFailed",
+    "generate_timestamps",
+    "generate_flight_paths",
+    "generate_color_lists",
+    "generate_drones"
 ]

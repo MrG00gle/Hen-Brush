@@ -1,20 +1,23 @@
 if __name__ == "__main__":
-    from ControlTower.CommunicationHandler import payload
-    from ControlTower.CommunicationHandler import test
     from ControlTower.CommunicationHandler.CommunicationHandler import CommunicationHandler
     from ControlTower.CommunicationHandler.CommunicationProtocol import CommunicationProtocol
     from ControlTower.CommunicationHandler.PacketType import PacketType
+    from ControlTower.CommunicationHandler.payload import PointPayload, TelemetryPayload, PointPayload
+    from ControlTower.CommunicationHandler.test import decode_command_payload, decode_point_payload
 else:
-    import payload
-    import test
     from .CommunicationHandler import CommunicationHandler
     from .CommunicationProtocol import CommunicationProtocol
     from .PacketType import PacketType
+    from .payload import PointPayload, TelemetryPayload, PointPayload
+    from .test import decode_command_payload, decode_point_payload
 
 __all__ = [
-    "payload",
-    "test",
     "CommunicationHandler",
     "CommunicationProtocol",
-    "PacketType"
+    "PacketType",
+    "PointPayload",
+    "TelemetryPayload",
+    "PointPayload",
+    "decode_command_payload",
+    "decode_point_payload",
 ]
