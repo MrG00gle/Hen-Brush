@@ -21,7 +21,7 @@ from threading import Thread
 from time import sleep
 from typing import List, Callable, Iterable, Union
 
-from ControlTower.CommunicationHandler import T
+from ControlTower.CommunicationHandler import TelemetryPayload
 from ControlTower.common import Drone, DroneAnimationStatus
 
 

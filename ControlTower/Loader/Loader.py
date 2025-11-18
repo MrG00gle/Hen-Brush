@@ -21,12 +21,12 @@ import json
 import logging
 import pathlib
 import re
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 from ControlTower.common import Drone, Animation, Point, Color, ConfigFileKeyError, DroneFileNameReadError
 
 class Loader:
-    path: pathlib.Path or pathlib.WindowsPath
+    path: Union[pathlib.Path, pathlib.WindowsPath]
 
     def __init__(self, path :str):
         try:
