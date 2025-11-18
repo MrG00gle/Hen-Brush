@@ -5,8 +5,16 @@ if __name__ == "__main__":
     from ControlTower.CommunicationHandler.CommunicationProtocol import CommunicationProtocol
     from ControlTower.CommunicationHandler.PacketType import PacketType
 else:
-    from .payload import *
-    from .test import *
+    import payload
+    import test
     from .CommunicationHandler import CommunicationHandler
     from .CommunicationProtocol import CommunicationProtocol
     from .PacketType import PacketType
+
+__all__ = [
+    "payload",
+    "test",
+    "CommunicationHandler",
+    "CommunicationProtocol",
+    "PacketType"
+]

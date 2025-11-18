@@ -16,4 +16,17 @@ else:
     from .DroneStatus import DroneStatus
     from .Point import Point
     from .errors import ConfigFileKeyError, DroneFileNameReadError, SerialError
-    from .test import *
+    import test
+
+__all__ = [
+    "Animation",
+    "Color",
+    "Command",
+    "Drone",
+    "DroneAnimationStatus",
+    "DroneStatus",
+    "Point",
+    "ConfigFileKeyError",
+    "DroneFileNameReadError",
+    "SerialError"
+]

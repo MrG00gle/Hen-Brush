@@ -9,3 +9,10 @@ else:
     from .test_TelemetryPayload import TestTelemetryPayload
     from .test_CommandPayload import TestCommandPayload
     from .test_CommunicationHandler import TestCommunicationHandler
+
+__all__ = [
+    "TestPointPayload",
+    "TestTelemetryPayload",
+    "TestCommandPayload",
+    "TestCommunicationHandler"
+]
