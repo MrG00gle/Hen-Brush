@@ -19,9 +19,9 @@ import logging
 import re
 from threading import Thread
 from time import sleep
-from typing import List, Callable, Iterable
+from typing import List, Callable, Iterable, Union
 
-from ControlTower.CommunicationHandler.payload import TelemetryPayload
+from ControlTower.CommunicationHandler import T
 from ControlTower.common import Drone, DroneAnimationStatus
 
 
@@ -89,7 +89,7 @@ class Scheduler:
                 logging.info(f"Starting: {drone.id}")
                 self.dispatcher_threads[drone.id].start()
 
-    def pause(self, drone: List[Drone] | Drone):
+    def pause(self, drone: Union[List[Drone], Drone]):
         if type(drone) is List[Drone]:
             logging.debug(f"Pausing Drones!")
             for d in drone:
@@ -99,7 +99,7 @@ class Scheduler:
             drone.animation_status = DroneAnimationStatus.PAUSED
             logging.info(f"Pausing Drone({drone.id})")
 
-    def stop(self, drone: List[Drone] | Drone):
+    def stop(self, drone: Union[List[Drone], Drone]):
         if type(drone) is list:
             logging.debug(f"Pausing Drones!")
             for d in drone:

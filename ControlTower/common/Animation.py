@@ -20,7 +20,7 @@
 import logging
 import pathlib
 from dataclasses import dataclass
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Union
 
 from .Color import Color
 from .Point import Point
@@ -31,9 +31,9 @@ class Animation:
     timestamps: List[int]
     flight_path: List[Point]
     colors: List[Color]
-    path: pathlib.Path | pathlib.WindowsPath
+    path: Union[pathlib.Path, pathlib.WindowsPath]
 
-    def __init__(self, timestamps: List[int], flight_path: List[Point], colors: List[Color], path: pathlib.Path | pathlib.WindowsPath) -> None:
+    def __init__(self, timestamps: List[int], flight_path: List[Point], colors: List[Color], path: Union[pathlib.Path, pathlib.WindowsPath]) -> None:
         self.timestamps = timestamps
         self.flight_path = flight_path
         self.colors = colors
