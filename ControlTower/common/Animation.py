@@ -31,9 +31,9 @@ class Animation:
     timestamps: List[int]
     flight_path: List[Point]
     colors: List[Color]
-    path: pathlib.Path or pathlib.WindowsPath
+    path: pathlib.Path | pathlib.WindowsPath
 
-    def __init__(self, timestamps: List[int], flight_path: List[Point], colors: List[Color], path: pathlib.Path or pathlib.WindowsPath) -> None:
+    def __init__(self, timestamps: List[int], flight_path: List[Point], colors: List[Color], path: pathlib.Path | pathlib.WindowsPath) -> None:
         self.timestamps = timestamps
         self.flight_path = flight_path
         self.colors = colors
