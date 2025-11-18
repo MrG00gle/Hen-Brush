@@ -60,7 +60,7 @@ class Animation:
 
         :param index: The index of a frame
 
-        :return: Tuple[int, Point, Color] and None if index is out of range
+        :return: Tuple[Timestamp, Point, Color] or None if index is out of range
         """
         try:
             timestamp = self.timestamps[index]

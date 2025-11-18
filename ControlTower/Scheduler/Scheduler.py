@@ -15,7 +15,7 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-
+import logging
 import re
 from threading import Thread
 from time import sleep
@@ -80,22 +80,31 @@ class Scheduler:
     def start(self, drones: List[Drone] = None):
         self.listener_thread.start()
         if drones is None:
+            logging.debug(f"Starting all drone threads!")
             for drone in self.drones:
-               self.dispatcher_threads[drone.id].start()
+                logging.info(f"Starting: {drone.id}")
+                self.dispatcher_threads[drone.id].start()
         else:
             for drone in drones:
-               self.dispatcher_threads[drone.id].start()
+                logging.info(f"Starting: {drone.id}")
+                self.dispatcher_threads[drone.id].start()
 
     def pause(self, drone: List[Drone] | Drone):
-        if type(drone) is list:
+        if type(drone) is List[Drone]:
+            logging.debug(f"Pausing Drones!")
             for d in drone:
                 d.animation_status = DroneAnimationStatus.PAUSED
+                logging.info(f"Pausing Drone({drone.id})")
         elif type(drone) is Drone:
             drone.animation_status = DroneAnimationStatus.PAUSED
+            logging.info(f"Pausing Drone({drone.id})")
 
     def stop(self, drone: List[Drone] | Drone):
         if type(drone) is list:
+            logging.debug(f"Pausing Drones!")
             for d in drone:
                 d.animation_status = DroneAnimationStatus.ENDED
+                logging.info(f"Stopping Drone({drone.id})")
         elif type(drone) is Drone:
             drone.animation_status = DroneAnimationStatus.ENDED
+            logging.info(f"Stopping Drone({drone.id})")

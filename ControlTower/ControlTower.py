@@ -15,13 +15,14 @@
 // along with this program; if not, write to the Free Software Foundation,
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
+
 import logging
 from typing import List
 
 from .common import *
 from .Loader import Loader
 from .Scheduler import Scheduler
-from .CommunicationHandler import CommunicationHandler
+from .CommunicationHandler import CommunicationHandler, PointPayload
 
 class ControlTower:
     drones: List[Drone]
@@ -41,7 +42,18 @@ class ControlTower:
             logging.error(f"No serial config detected")
             raise SerialConfigLoadFailed(f"No serial config detected")
 
+        self.scheduler = Scheduler(drones=self.drones, dispatcher_operation=self.__dispatch_operation, telemetry_operation=self.comm.listen)
 
+    def __dispatch_operation(self, drone: Drone) -> None:
+        drone_id = drone.id
+        _, point, color = drone.get_frame(drone.animation_step)
+        self.comm.send(PointPayload(drone_id, point, color))
 
-        # self.scheduler = Scheduler(drones=self.drones, )
+    def start(self, drones: List[Drone]):
+        self.scheduler.start(drones=drones)
 
+    def pause(self, drone: List[Drone] | Drone):
+        self.scheduler.pause(drone)
+
+    def stop(self, drone: List[Drone] | Drone):
+        self.scheduler.stop(drone)

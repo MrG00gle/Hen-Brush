@@ -154,6 +154,13 @@ class Drone:
 
 
     def get_frame(self, frame_index: int) -> Optional[Tuple[int, Point, Color]]:
+        """
+        Method for getting animation frame by index, in case of IndexError will return None.
+
+        :param frame_index: The index of a frame
+
+        :return: Tuple[timestamp, Point, Color] or None if index is out of range
+        """
         return self.animation.get_frame(frame_index)
 
     def get_index(self, frame: Tuple[int, Point, Color]) -> Optional[int]:
