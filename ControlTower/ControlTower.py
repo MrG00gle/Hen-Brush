@@ -22,7 +22,7 @@ from typing import List
 from .common import *
 from .Loader import Loader
 from .Scheduler import Scheduler
-from .CommunicationHandler import CommunicationHandler, PointPayload
+from .CommunicationHandler import CommunicationHandler, PointPayload, CPointPayload
 
 class ControlTower:
     drones: List[Drone]
@@ -47,7 +47,7 @@ class ControlTower:
     def __dispatch_operation(self, drone: Drone) -> None:
         drone_id = drone.id
         _, point, color = drone.get_frame(drone.animation_step)
-        self.comm.send(PointPayload(drone_id, point, color))
+        self.comm.send(CPointPayload(drone_id, point, color))
 
     def start(self, drones: List[Drone]):
         self.scheduler.start(drones=drones)
