@@ -2,12 +2,13 @@ from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Header, Footer, Button, DataTable, RichLog, Label
 from textual.binding import Binding
+from ControlTower import ControlTower
 
 
 # UI Prototype
 
 
-class DroneControlApp(App):
+class ControlTerminal(App, ControlTower):
     """A simple TUI for controlling a drone swarm."""
 
     BINDINGS = [
@@ -44,6 +45,7 @@ class DroneControlApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # ControlTower.__init__()
         self.left_width = 50
 
     def compose(self) -> ComposeResult:
@@ -100,5 +102,5 @@ class DroneControlApp(App):
 
 
 if __name__ == "__main__":
-    app = DroneControlApp()
+    app = ControlTerminal()
     app.run()
