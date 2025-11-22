@@ -2,7 +2,7 @@ from .CommunicationHandler import CommunicationHandler
 from .CommunicationProtocol import CommunicationProtocol
 from .PacketType import PacketType
 from .payload import PointPayload, TelemetryPayload, PointPayload
-from .test import decode_command_payload, decode_point_payload
+from .test import decode_command_payload, decode_point_payload, decode_cpoint_payload
 
 __all__ = [
     "CommunicationHandler",
@@ -13,4 +13,5 @@ __all__ = [
     "PointPayload",
     "decode_command_payload",
     "decode_point_payload",
+    "decode_cpoint_payload"
 ]

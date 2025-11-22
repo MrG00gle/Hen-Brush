@@ -24,17 +24,18 @@ from ControlTower.common import Command, Point, Color
 
 
 @dataclass
-class PointPayload:
+class CPointPayload:
     _drone_id: int
     _command: Command
     _point: Point
     _color: Color
     _payload: bytes
 
-    def __init__(self, drone_id: int, point: Point, command: Command = Command.POSITION):
+    def __init__(self, drone_id: int, point: Point, color: Color, command: Command = Command.POSITION_COLOR):
         self._drone_id = drone_id
         self._command = command
         self._point = point
+        self._color = color
         self.__create_payload()
 
     def __repr__(self) -> str:
@@ -43,8 +44,8 @@ class PointPayload:
     def __create_payload(self):
         """
         Creates a binary payload for drone communication protocol using half-precision floats.
-        drone_id (1 byte) + command (1 byte) + x,y,z (each 2 bytes)
-        Total length 9 bytes.
+        drone_id (1 byte) + command (1 byte) + x,y,z (each 2 bytes), r,g,b (each 1 byte)
+        Total length 12 bytes.
         """
 
         # Validate integer inputs
@@ -52,6 +53,9 @@ class PointPayload:
             raise ValueError("Drone ID must be an integer between 0 and 255")
         if not isinstance(self._command.value, int) or not (0 <= self._command.value <= 255):
             raise ValueError("Command must be an integer between 0 and 255")
+        if not isinstance(self._color.R, int) or not isinstance(self._color.G, int) or not isinstance(self._color.B, int) or \
+                not (0 <= self._color.R <= 255 and 0 <= self._color.G <= 255 and 0 <= self._color.B <= 255):
+            raise ValueError("RGB values must be integers between 0 and 255")
 
         # Convert floats to float16 using NumPy
         try:
@@ -68,12 +72,15 @@ class PointPayload:
 
         # Pack data: B (unsigned char, 1 byte), 2s (2-byte string for float16), B for RGB
         self._payload = struct.pack(
-            'BB2s2s2s',
+            'BB2s2s2sBBB',
             self._drone_id,
             self._command.value,
             x_bytes,
             y_bytes,
             z_bytes,
+            self._color.R,
+            self._color.G,
+            self._color.B
         )
 
     @property
@@ -87,6 +94,10 @@ class PointPayload:
     @property
     def point(self):
         return self._point
+
+    @property
+    def color(self):
+        return self._color
 
     @property
     def payload(self):
