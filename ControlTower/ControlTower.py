@@ -49,11 +49,19 @@ class ControlTower:
         _, point, color = drone.get_frame(drone.animation_step)
         self.comm.send(CPointPayload(drone_id, point, color))
 
+    def send_to_point(self, drones: List[Drone], points: List[Point]):
+        for drone, point in drones, points:
+            self.comm.send(PointPayload(drone.id, point))
+            logging.info(f"Sending Drone({drone.id}) to Point({point})")
+
     def start(self, drones: List[Drone]):
         self.scheduler.start(drones=drones)
+        logging.info(f"Starting animation for Drones({', '.join(map(lambda x: str(x.id), drones))})")
 
     def pause(self, drones: List[Drone]):
         self.scheduler.pause(drones=drones)
+        logging.info(f"Pausing animation for Drones({', '.join(map(lambda x: str(x.id), drones))})")
 
     def stop(self, drones: List[Drone]):
         self.scheduler.stop(drones=drones)
+        logging.info(f"Stopping animation for Drones({', '.join(map(lambda x: str(x.id), drones))})")
