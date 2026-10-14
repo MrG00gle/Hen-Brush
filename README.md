@@ -4,6 +4,15 @@ Hen-Brush plays light-and-motion animations on a swarm of drones. It loads one C
 streams the frames to the drones over a serial link and shows their telemetry (position, status, progress).
 Two front ends share the same core: a terminal UI (Textual) and a desktop GUI (GTK4 / libadwaita).
 
+## Documentation
+
+The full documentation lives in [docs/](docs/Home.md): [Getting started](docs/Getting-Started.md),
+[Architecture](docs/Architecture.md), [Animation format](docs/Animation-Format.md),
+[Serial protocol](docs/Serial-Protocol.md), [Scheduler and drone lifecycle](docs/Scheduler-and-Drone-Lifecycle.md),
+[User interfaces](docs/User-Interfaces.md), [Presenter API](docs/Presenter-API.md), [Testing](docs/Testing.md),
+[Development guide](docs/Development-Guide.md), [Troubleshooting](docs/Troubleshooting.md) and
+[Glossary](docs/Glossary.md).
+
 ## Requirements
 
 - Python 3.10 or newer (developed and tested on 3.12). The code uses `match` and `X | None`, so a
