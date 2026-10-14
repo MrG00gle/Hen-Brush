@@ -18,13 +18,23 @@
 
 from dataclasses import dataclass
 
+
 @dataclass
 class Point:
+    """A position in 3D space. The coordinates are read-only."""
+
     _X: float
     _Y: float
     _Z: float
 
     def __init__(self, x: float, y: float, z: float) -> None:
+        """Create a point.
+
+        Args:
+            x: X coordinate.
+            y: Y coordinate.
+            z: Z coordinate.
+        """
         self._X = x
         self._Y = y
         self._Z = z
@@ -33,13 +43,16 @@ class Point:
         return f"{self.X} {self.Y} {self.Z}"
 
     @property
-    def X(self):
+    def X(self) -> float:
+        """X coordinate."""
         return self._X
 
     @property
-    def Y(self):
+    def Y(self) -> float:
+        """Y coordinate."""
         return self._Y
 
     @property
-    def Z(self):
+    def Z(self) -> float:
+        """Z coordinate."""
         return self._Z

@@ -19,6 +19,8 @@
 from enum import Enum
 
 class Command(Enum):
+    """Command byte sent to a drone. The values are part of the wire protocol and must not change."""
+
     TELEMETRY_REQUEST = 1
     ARM = 2
     POSITION_COLOR = 3

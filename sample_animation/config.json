@@ -1,0 +1,5 @@
+{
+  "serial_port": "loop://",
+  "serial_speed": 115200,
+  "ping_timeout": 1
+}

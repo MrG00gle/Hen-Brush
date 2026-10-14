@@ -1,3 +1,4 @@
+"""Typed payloads carried inside serial frames."""
 from .PointPayload import PointPayload
 from .CPointPayload import CPointPayload
 from .CommandPayload import CommandPayload

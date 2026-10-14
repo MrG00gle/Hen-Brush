@@ -17,56 +17,63 @@
 """
 
 import struct
-import numpy as np
 from dataclasses import dataclass
 
-from ControlTower.common import Command, Point, Color
+from ControlTower.common import Command, Point
+from ._float16 import encode_float16
 
 
 @dataclass
 class PointPayload:
+    """Move a drone to a point (packet type POINT).
+
+    Wire layout (8 bytes): drone_id (1) + command (1) + x, y, z (float16, 2 bytes each).
+    """
+
     _drone_id: int
     _command: Command
     _point: Point
-    _color: Color
     _payload: bytes
 
-    def __init__(self, drone_id: int, point: Point, command: Command = Command.POSITION):
+    def __init__(self, drone_id: int, point: Point, command: Command = Command.POSITION) -> None:
+        """Validate the arguments and encode the payload.
+
+        Args:
+            drone_id: Target drone id, 0-255.
+            point: Target position; each coordinate must fit in float16 (|value| <= 65504).
+            command: Command byte to send with the point.
+
+        Raises:
+            ValueError: If the drone id is not an int in 0-255, or a coordinate is out of float16 range.
+        """
         self._drone_id = drone_id
         self._command = command
         self._point = point
         self.__create_payload()
 
     def __repr__(self) -> str:
-        return f"PointPacket(ID: {self._drone_id}, COMMAND: {self._command}, POINT: {self._point}, COLOR: {self._color}, PACKET: {self._payload.hex()})"
+        return f"PointPayload(ID: {self._drone_id}, COMMAND: {self._command}, POINT: {self._point}, PACKET: {self._payload.hex()})"
 
-    def __create_payload(self):
-        """
-        Creates a binary payload for drone communication protocol using half-precision floats.
-        drone_id (1 byte) + command (1 byte) + x,y,z (each 2 bytes)
-        Total length 9 bytes.
-        """
+    def __create_payload(self) -> None:
+        """Encode the payload: drone_id (1 byte) + command (1 byte) + x, y, z (2 bytes each), 8 bytes total.
 
+        Raises:
+            ValueError: If the drone id is not an int in 0-255.
+            ValueError: If the command value is not in 0-255.
+            ValueError: If a coordinate does not fit in float16.
+        """
         # Validate integer inputs
         if not isinstance(self._drone_id, int) or not (0 <= self._drone_id <= 255):
             raise ValueError("Drone ID must be an integer between 0 and 255")
+
         if not isinstance(self._command.value, int) or not (0 <= self._command.value <= 255):
             raise ValueError("Command must be an integer between 0 and 255")
 
-        # Convert floats to float16 using NumPy
-        try:
-            x_float16 = np.float16(self._point.X)
-            y_float16 = np.float16(self._point.Y)
-            z_float16 = np.float16(self._point.Z)
-        except (OverflowError, ValueError) as e:
-            raise ValueError("Float values out of range for float16") from e
+        x_bytes = encode_float16(self._point.X)
+        y_bytes = encode_float16(self._point.Y)
+        z_bytes = encode_float16(self._point.Z)
 
-        # Convert float16 to bytes (2 bytes each)
-        x_bytes = np.float16(self._point.X).tobytes()
-        y_bytes = np.float16(self._point.Y).tobytes()
-        z_bytes = np.float16(self._point.Z).tobytes()
-
-        # Pack data: B (unsigned char, 1 byte), 2s (2-byte string for float16), B for RGB
+        # Pack data: B (unsigned char, 1 byte), 2s (2-byte string for float16)
         self._payload = struct.pack(
             'BB2s2s2s',
             self._drone_id,
@@ -77,17 +84,21 @@ class PointPayload:
         )
 
     @property
-    def drone_id(self):
+    def drone_id(self) -> int:
+        """Target drone id."""
         return self._drone_id
 
     @property
-    def command(self):
+    def command(self) -> Command:
+        """Command byte sent with the point."""
         return self._command
 
     @property
-    def point(self):
+    def point(self) -> Point:
+        """Target position."""
         return self._point
 
     @property
-    def payload(self):
+    def payload(self) -> bytes:
+        """The encoded payload (8 bytes)."""
         return self._payload

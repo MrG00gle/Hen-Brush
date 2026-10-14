@@ -19,6 +19,8 @@
 from enum import Enum
 
 class DroneStatus(Enum):
+    """Health status reported by a drone. The values are part of the telemetry wire format."""
+
     LOST = 1
     INACTIVE = 2
     OK = 3

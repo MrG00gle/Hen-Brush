@@ -1,8 +1,8 @@
+"""Serial communication with the drones: framing, packet types and payloads."""
 from .CommunicationHandler import CommunicationHandler
 from .CommunicationProtocol import CommunicationProtocol
 from .PacketType import PacketType
-from .payload import PointPayload, TelemetryPayload, PointPayload, CPointPayload
-from .test import decode_command_payload, decode_point_payload, decode_cpoint_payload
+from .payload import PointPayload, CPointPayload, CommandPayload, TelemetryPayload
 
 __all__ = [
     "CommunicationHandler",
@@ -10,9 +10,6 @@ __all__ = [
     "PacketType",
     "PointPayload",
     "CPointPayload",
-    "TelemetryPayload",
-    "PointPayload",
-    "decode_command_payload",
-    "decode_point_payload",
-    "decode_cpoint_payload"
+    "CommandPayload",
+    "TelemetryPayload"
 ]

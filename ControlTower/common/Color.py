@@ -18,13 +18,29 @@
 
 from dataclasses import dataclass
 
+
 @dataclass
 class Color:
+    """An RGB color. Channels are not validated here; payloads check the 0-255 range when encoding.
+
+    Attributes:
+        R: Red channel.
+        G: Green channel.
+        B: Blue channel.
+    """
+
     R: int
     G: int
     B: int
 
-    def __init__(self, r: int, g: int, b: int):
+    def __init__(self, r: int, g: int, b: int) -> None:
+        """Create a color.
+
+        Args:
+            r: Red channel.
+            g: Green channel.
+            b: Blue channel.
+        """
         self.R = r
         self.G = g
         self.B = b

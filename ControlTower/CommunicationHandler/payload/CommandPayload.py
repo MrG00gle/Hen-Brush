@@ -24,11 +24,25 @@ from ControlTower.common import Command
 
 @dataclass
 class CommandPayload:
+    """Send a command to a drone (packet type COMMAND).
+
+    Wire layout (2 bytes): drone_id (1) + command (1).
+    """
+
     _drone_id: int
     _command: Command
     _payload: bytes
 
-    def __init__(self, drone_id: int, command: Command):
+    def __init__(self, drone_id: int, command: Command) -> None:
+        """Validate the arguments and encode the payload.
+
+        Args:
+            drone_id: Target drone id, 0-255.
+            command: Command to send; its value is used verbatim as the command byte.
+
+        Raises:
+            ValueError: If the drone id is not an int in 0-255 or the command value is not in 0-255.
+        """
         self._drone_id = drone_id
         self._command = command
         self.__create_payload()
@@ -36,17 +50,16 @@ class CommandPayload:
     def __repr__(self) -> str:
         return f"CommandPayload(ID: {self._drone_id}, COMMAND: {self._command.value}, PACKET: {self._payload.hex()})"
 
-    def __create_payload(self):
-        """
-        Creates a payload with a 1-byte command_id for drone communication.
-        Drone_id (1) + Command (1)
+    def __create_payload(self) -> None:
+        """Encode the payload: drone_id (1 byte) + command (1 byte).
 
         Raises:
-            ValueError: If drone_id is not in valid range (0-255)
-            ValueError: If command is not in valid range (0-255)
+            ValueError: If the drone id is not an int in 0-255.
+            ValueError: If the command value is not in 0-255.
         """
         if not isinstance(self._drone_id, int) or not (0 <= self._drone_id <= 255):
             raise ValueError("Drone ID must be an integer between 0 and 255")
+
         if not 0 <= self._command.value <= 255:
             raise ValueError("command must be between 0 and 255")
 
@@ -58,13 +71,16 @@ class CommandPayload:
         )
 
     @property
-    def drone_id(self):
+    def drone_id(self) -> int:
+        """Target drone id."""
         return self._drone_id
 
     @property
-    def command(self):
+    def command(self) -> Command:
+        """Command sent to the drone."""
         return self._command
 
     @property
-    def payload(self):
+    def payload(self) -> bytes:
+        """The encoded payload (2 bytes)."""
         return self._payload

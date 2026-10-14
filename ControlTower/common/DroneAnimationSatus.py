@@ -19,6 +19,8 @@
 from enum import Enum
 
 class DroneAnimationStatus(Enum):
+    """Playback state of a drone's animation: LIVE (playing), PAUSED, ENDED (finished) or READY (not started)."""
+
     LIVE = 1
     PAUSED = 2
     ENDED = 3

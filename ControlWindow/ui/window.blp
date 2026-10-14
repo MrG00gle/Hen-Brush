@@ -1,0 +1,124 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Main window. Compiled to window.ui by ControlWindow/ui_build.py (needs blueprint-compiler).
+// Needs libadwaita >= 1.4 (Adw.ToolbarView). Adw.ViewSwitcher works on every supported version;
+// Adw.ViewSwitcherSidebar would need libadwaita >= 1.7 and is deliberately not used.
+template $HenBrushWindow: Adw.ApplicationWindow {
+  default-width: 1000;
+  default-height: 640;
+  title: _("Hen Brush");
+
+  content: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {
+      title-widget: Adw.ViewSwitcher {
+        stack: stack;
+        policy: wide;
+      };
+    }
+
+    content: Adw.ToastOverlay toast_overlay {
+      child: Adw.ViewStack stack {
+        Adw.ViewStackPage {
+          name: "drones";
+          title: _("Drones");
+          icon-name: "view-list-symbolic";
+
+          child: Gtk.Box drones_page {
+            orientation: vertical;
+
+            Gtk.ScrolledWindow {
+              vexpand: true;
+              hexpand: true;
+
+              child: Gtk.ColumnView drone_view {
+                show-row-separators: true;
+                show-column-separators: true;
+              };
+            }
+
+            Gtk.ActionBar {
+              [start]
+              Gtk.Button start_button {
+                label: _("Start");
+                sensitive: false;
+
+                styles [
+                  "suggested-action",
+                ]
+              }
+
+              [start]
+              Gtk.Button pause_button {
+                label: _("Pause");
+                sensitive: false;
+              }
+
+              [start]
+              Gtk.Button stop_button {
+                label: _("Stop");
+                sensitive: false;
+
+                styles [
+                  "destructive-action",
+                ]
+              }
+
+              [end]
+              Gtk.Button stop_all_button {
+                label: _("Stop all");
+                sensitive: false;
+
+                styles [
+                  "destructive-action",
+                ]
+              }
+
+              [end]
+              Gtk.Button pause_all_button {
+                label: _("Pause all");
+                sensitive: false;
+              }
+
+              [end]
+              Gtk.Button start_all_button {
+                label: _("Start all");
+                sensitive: false;
+
+                styles [
+                  "suggested-action",
+                ]
+              }
+            }
+          };
+        }
+
+        Adw.ViewStackPage {
+          name: "logs";
+          title: _("Logs");
+          icon-name: "utilities-terminal-symbolic";
+
+          child: Gtk.Box logs_page {
+            orientation: vertical;
+
+            Gtk.ScrolledWindow {
+              vexpand: true;
+              hexpand: true;
+
+              child: Gtk.TextView log_view {
+                editable: false;
+                cursor-visible: false;
+                monospace: true;
+                left-margin: 6;
+                right-margin: 6;
+                top-margin: 6;
+                bottom-margin: 6;
+              };
+            }
+          };
+        }
+      };
+    };
+  };
+}

@@ -17,10 +17,9 @@
 """
 
 
-from math import sqrt
-from typing import Tuple, Optional
+from math import dist
 
-from .Animation import Animation
+from .Animation import Animation, Frame
 from .Color import Color
 from .Command import Command
 from .DroneAnimationSatus import DroneAnimationStatus
@@ -29,29 +28,47 @@ from .Point import Point
 
 
 class Drone:
+    """A drone with its animation and the state last known about it.
+
+    Drones are equal, hashable and sortable by ``id`` only.
+
+    Attributes:
+        animation: The animation this drone flies.
+    """
+
     _id: int
     animation: Animation
     _home_position: Point
     _position: Point
     _reported_position: Point
-    _position_error: float
     _status: DroneStatus
     _animation_status: DroneAnimationStatus
     _battery: int
     _command: Command
     _animation_step: int
 
-    def __init__(self, id: int, animation: Animation):
+    def __init__(self, id: int, animation: Animation) -> None:
+        """Create a drone parked at the first frame of its animation.
+
+        Args:
+            id: Drone id.
+            animation: Animation to fly; must have at least one frame.
+
+        Raises:
+            ValueError: If the animation has no frames.
+        """
+        if len(animation) == 0:
+            raise ValueError(f"Drone {id} needs an animation with at least one frame, got an empty one: {animation.path}")
+
         self._id = id
         self.animation = animation
-        self._home_position = animation.get_frame(0)[1]
+        self._home_position = animation.flight_path[0]
         self._position = self._home_position
         self._reported_position = self._home_position
         self._status = DroneStatus.OK
         self._animation_status = DroneAnimationStatus.READY
         self._battery = -1
         self._command = Command.TELEMETRY_REQUEST
-        self._position_error = 0
         self._animation_step = 0
 
     def __repr__(self) -> str:
@@ -69,99 +86,128 @@ class Drone:
             return NotImplemented
         return self._id == other._id
 
+    def __hash__(self) -> int:
+        """Hash by id, consistent with ``__eq__``."""
+        return hash(self._id)
+
     @property
-    def id(self):
+    def id(self) -> int:
+        """Drone id."""
         return self._id
 
     @property
-    def animation_len(self):
+    def animation_len(self) -> int:
+        """Number of frames in the animation."""
         return len(self.animation)
 
     @property
-    def home_position(self):
+    def home_position(self) -> Point:
+        """Position of the first animation frame."""
         return self._home_position
 
     @property
-    def position(self):
+    def position(self) -> Point:
+        """Position the drone is expected to be at."""
         return self._position
 
     @position.setter
-    def position(self, position: Point):
+    def position(self, position: Point) -> None:
         self._position = position
 
     @property
-    def reported_position(self):
+    def reported_position(self) -> Point:
+        """Position last reported by the drone's telemetry."""
         return self._reported_position
 
     @reported_position.setter
-    def reported_position(self, position: Point):
+    def reported_position(self, position: Point) -> None:
         self._reported_position = position
 
     @property
-    def position_error(self):
-        pos_error = sqrt((self._position.X - self._reported_position.X) ** 2 + (self._position.Y - self._reported_position.Y) ** 2 + (self._position.Z - self._reported_position.Z) ** 2)
-        if pos_error == self._position_error:
-            return self._position_error
-        else:
-            self._position_error = pos_error
-            return self._position_error
+    def position_error(self) -> float:
+        """Distance in 3D between the expected and the reported position."""
+        return dist(
+            (self._position.X, self._position.Y, self._position.Z),
+            (self._reported_position.X, self._reported_position.Y, self._reported_position.Z),
+        )
 
     @property
-    def command(self):
+    def command(self) -> Command:
+        """Command last sent to the drone."""
         return self._command
 
     @command.setter
-    def command(self, command: Command):
+    def command(self, command: Command) -> None:
         self._command = command
 
     @property
-    def status(self):
+    def status(self) -> DroneStatus:
+        """Health status of the drone."""
         return self._status
 
     @status.setter
-    def status(self, status: DroneStatus):
+    def status(self, status: DroneStatus) -> None:
         self._status = status
 
     @property
-    def animation_status(self):
+    def animation_status(self) -> DroneAnimationStatus:
+        """Playback state of the animation."""
         return self._animation_status
 
     @animation_status.setter
-    def animation_status(self, animation_status: DroneAnimationStatus):
+    def animation_status(self, animation_status: DroneAnimationStatus) -> None:
         self._animation_status = animation_status
 
     @property
-    def battery(self):
+    def battery(self) -> int:
+        """Battery level in percent (0-100), or -1 while unknown.
+
+        Raises:
+            ValueError: When set to a value outside 0-100.
+        """
         return self._battery
 
     @battery.setter
-    def battery(self, value: int):
+    def battery(self, value: int) -> None:
         if 0 <= value <= 100:
             self._battery = value
         else:
             raise ValueError(f"Wrong battery input value, must be (0 <=> 100), got ({value}).")
 
     @property
-    def animation_step(self):
+    def animation_step(self) -> int:
+        """Index of the current animation frame.
+
+        Raises:
+            ValueError: When set to a value outside ``0 <= step < animation_len``.
+        """
         return self._animation_step
 
     @animation_step.setter
-    def animation_step(self, step: int):
-        if 0 <= step <= self.animation_len:
+    def animation_step(self, step: int) -> None:
+        if 0 <= step < self.animation_len:
             self._animation_step = step
         else:
-            raise ValueError(f"Wrong value, the step value:{step} will be ignored, animation step must be between 0 and {self.animation_len}")
+            raise ValueError(f"Wrong value, the step value:{step} will be ignored, animation step must be between 0 and {self.animation_len - 1}")
 
+    def get_frame(self, frame_index: int) -> Frame | None:
+        """Get an animation frame by index.
 
-    def get_frame(self, frame_index: int) -> Optional[Tuple[int, Point, Color]]:
-        """
-        Method for getting animation frame by index, in case of IndexError will return None.
+        Args:
+            frame_index: Index of the frame.
 
-        :param frame_index: The index of a frame
-
-        :return: Tuple[timestamp, Point, Color] or None if index is out of range
+        Returns:
+            ``(timestamp, point, color)``, or None if the index is out of range.
         """
         return self.animation.get_frame(frame_index)
 
-    def get_index(self, frame: Tuple[int, Point, Color]) -> Optional[int]:
+    def get_index(self, frame: Frame) -> int | None:
+        """Find the index of a frame in the animation.
+
+        Args:
+            frame: A ``(timestamp, point, color)`` tuple; only the timestamp is compared.
+
+        Returns:
+            The index, or None if the animation has no frame with that timestamp.
+        """
         return self.animation.get_index(frame)

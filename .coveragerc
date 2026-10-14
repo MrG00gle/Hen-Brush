@@ -1,0 +1,19 @@
+[run]
+branch = True
+source =
+    ControlTower
+    ControlTerminal
+    ControlWindow
+omit =
+    ControlWindow/models.py
+    ControlWindow/window.py
+    ControlWindow/app.py
+    ControlWindow/__main__.py
+    */__main__.py
+    tests/*
+
+[report]
+show_missing = True
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:

@@ -18,28 +18,48 @@
 
 
 import logging
-from typing import Union, Generator
+from typing import Generator, Optional, Union
 
-from .payload import *
+from .payload import PointPayload, CPointPayload, CommandPayload, TelemetryPayload
 from .PacketType import PacketType
 from .CommunicationProtocol import CommunicationProtocol
 
+logger = logging.getLogger(__name__)
+
 
 class CommunicationHandler(CommunicationProtocol):
+    """Sends drone payloads and listens for telemetry over a serial port.
+
+    Attributes:
+        port: Device name or pyserial URL the handler was opened with.
+        timeout: Read timeout in seconds, also the pause between ``None`` items from ``listen``.
+    """
 
     port: str
-    timeout: int
+    timeout: float
 
-    def __init__(self, port: str, baudrate: int = 115200, timeout: int = 1):
+    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1) -> None:
+        """Open the serial port.
+
+        Args:
+            port: Device name or pyserial URL (e.g. ``loop://`` for tests).
+            baudrate: Port speed in baud.
+            timeout: Read timeout in seconds.
+        """
         self.port = port
         self.timeout = timeout
         super().__init__(port=port, baudrate=baudrate, timeout=timeout)
 
     def send(self, payload: Union[PointPayload, CPointPayload, CommandPayload]) -> None:
+        """Send a payload without waiting for an ACK.
+
+        Args:
+            payload: Payload to send.
+
+        Raises:
+            ValueError: If the payload type cannot be sent.
         """
-            Send data payload without waiting on ACK
-        """
-        logging.debug(f"Sending: {payload}")
+        logger.debug("Sending: %s", payload)
 
         match payload:
             case PointPayload():
@@ -51,24 +71,31 @@ class CommunicationHandler(CommunicationProtocol):
             case _:
                 raise ValueError(f"Payload can't be type: {type(payload)}")
 
-    def listen(self) -> Generator[TelemetryPayload, None, None]:
-        """
-            Listen for Telemetry packets, parse and return Telemetry Payload
+    def listen(self) -> Generator[Optional[TelemetryPayload], None, None]:
+        """Listen for telemetry packets until the port is closed.
+
+        Yields:
+            A ``TelemetryPayload`` for each telemetry packet, or None when no valid packet arrived
+            within ``timeout`` or a telemetry payload could not be decoded. Consumers can use the
+            None items to poll a stop flag. Packets of other types are skipped.
         """
         while self.ser.is_open:
             packet = self.read_packet(timeout=self.timeout)
 
             if packet:
-                packet_type = packet['type']
-                payload = packet['payload']
-
-                match packet_type:
+                match packet['type']:
                     case PacketType.TELEMETRY:
-                        telemetry = TelemetryPayload(payload=payload)
-                        logging.debug(f"Decoded: {telemetry}")
+                        try:
+                            telemetry = TelemetryPayload(payload=packet['payload'])
+                        except ValueError as error:
+                            logger.warning("Malformed telemetry payload %s: %s", packet['payload'].hex(), error)
+                            yield None
+                            continue
+                        logger.debug("Decoded: %s", telemetry)
                         yield telemetry
             else:
                 yield None
 
-    def close(self):
+    def close(self) -> None:
+        """Close the serial port."""
         self.ser.close()

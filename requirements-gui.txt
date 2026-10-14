@@ -1,0 +1,11 @@
+# GTK4 / libadwaita GUI dependencies. Linux only; also needs system packages (GTK4, libadwaita, gobject-introspection).
+# UNVERIFIED: 3.58.1 is the newest version on the package index, but PyGObject cannot be installed on Windows,
+# so this pin was not install-tested.
+#
+# System dependencies (needs GTK >= 4.10, libadwaita >= 1.4, blueprint-compiler >= 0.10):
+#   Debian/Ubuntu: sudo apt install python3-gi gir1.2-gtk-4.0 gir1.2-adw-1 blueprint-compiler libgirepository1.0-dev libcairo2-dev pkg-config python3-dev
+#   Fedora:        sudo dnf install python3-gobject gtk4 libadwaita blueprint-compiler
+#   Arch:          sudo pacman -S python-gobject gtk4 libadwaita blueprint-compiler
+# blueprint-compiler turns ControlWindow/ui/window.blp into window.ui on first start (and whenever the .blp
+# changes). Set BLUEPRINT_COMPILER to use an executable that is not on PATH.
+PyGObject==3.58.1

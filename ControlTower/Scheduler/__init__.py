@@ -1,7 +1,6 @@
+"""Per-drone animation scheduling and telemetry listening."""
 from .Scheduler import Scheduler
-from .test_Scheduler import TestScheduler
 
 __all__ = [
-    "Scheduler",
-    "TestScheduler"
+    "Scheduler"
 ]
